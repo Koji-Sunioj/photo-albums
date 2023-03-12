@@ -1,3 +1,9 @@
+export type StateProps = {
+  albums: AlbumStateProps;
+  filter: FilterStateProps;
+  filterToggle: NavBarToggleProps;
+};
+
 export type childrenProps = {
   children: JSX.Element[];
 };
@@ -15,12 +21,13 @@ export type AlbumStateProps = {
 };
 
 export type FilterStateProps = {
-  page: number;
+  page: string;
   direction: string;
   sort: string;
   type: string;
 };
-export type StateProps = {
-  albums: AlbumStateProps;
-  filter: FilterStateProps;
+
+export type NavBarToggleProps = {
+  toggleDisplay: boolean;
+  filterDisplay: boolean;
 };

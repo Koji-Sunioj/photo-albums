@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialFilterState = {
-  page: 1,
+  page: "1",
   direction: "descending",
   sort: "created",
   type: "text",
