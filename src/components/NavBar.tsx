@@ -6,7 +6,7 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 
 import { useEffect } from "react";
 import { AppDispatch } from "../redux/store";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   displayFilter,
@@ -17,12 +17,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { StateProps } from "../utils/types";
 
 function NavBar() {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const {
     filterToggle: { filterDisplay, toggleDisplay },
+    filter,
   } = useSelector((state: StateProps) => state);
-  const currentLocation = useLocation();
-  const { pathname } = currentLocation;
+  const { pathname } = useLocation();
 
   useEffect(() => {
     pathname === "/albums"
@@ -39,7 +40,21 @@ function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/albums" state={{ path: pathname }}>
+            <Nav.Link
+              as={Link}
+              to="/albums"
+              onClick={(event) => {
+                event.preventDefault();
+                const filterString = Object.entries(filter)
+                  .map((thing) => thing.join("="))
+                  .join("&");
+                console.log(filterString);
+                navigate({
+                  pathname: "/albums",
+                  search: `${filterString}`,
+                });
+              }}
+            >
               Photo Albums
             </Nav.Link>
           </Nav>
