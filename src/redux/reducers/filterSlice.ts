@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialFilterState = {
+import { FilterStateProps } from "../../utils/types";
+
+export const initialFilterState: FilterStateProps = {
   page: "1",
   direction: "descending",
   sort: "created",
@@ -12,8 +14,11 @@ export const filterSlice = createSlice({
   initialState: initialFilterState,
   reducers: {
     resetFilter: () => initialFilterState,
+    setFilter: (state, action) => {
+      return { ...state, ...action.payload };
+    },
   },
 });
 
-export const { resetFilter } = filterSlice.actions;
+export const { resetFilter, setFilter } = filterSlice.actions;
 export default filterSlice.reducer;

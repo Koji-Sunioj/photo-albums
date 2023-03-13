@@ -1,11 +1,4 @@
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
-
 import { useEffect } from "react";
-import { AppDispatch } from "../redux/store";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
@@ -13,8 +6,13 @@ import {
   displayToggle,
 } from "../redux/reducers/navBarToggleSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { StateProps, AppDispatch } from "../utils/types";
 
-import { StateProps } from "../utils/types";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -48,7 +46,6 @@ function NavBar() {
                 const filterString = Object.entries(filter)
                   .map((thing) => thing.join("="))
                   .join("&");
-                console.log(filterString);
                 navigate({
                   pathname: "/albums",
                   search: `${filterString}`,

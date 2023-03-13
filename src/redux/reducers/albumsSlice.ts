@@ -1,15 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import apiUrls from "../../utils/apis.json";
-import { apisProps, FilterStateProps } from "../../utils/types";
+import {
+  apisProps,
+  FilterStateProps,
+  AlbumStateProps,
+} from "../../utils/types";
 
 export const fetchAlbums = createAsyncThunk(
   "fetch-albums",
   async (filter: FilterStateProps) => {
     const filterString = Object.entries(filter)
-      .map((thing) => thing.join("="))
+      .map((param) => param.join("="))
       .join("&");
-    console.log(filterString);
     const apis: apisProps = apiUrls["CdkWorkshopStack"];
     const albumsApi = Object.keys(apis).find((endPoint) =>
       endPoint.includes("AlbumEndpoint")
@@ -20,8 +23,9 @@ export const fetchAlbums = createAsyncThunk(
   }
 );
 
-const initialAlbumsState = {
+const initialAlbumsState: AlbumStateProps = {
   data: null,
+  tags: null,
   pages: null,
   loading: false,
   error: false,
@@ -29,7 +33,7 @@ const initialAlbumsState = {
 };
 
 export const albumsSlice = createSlice({
-  name: "metrics",
+  name: "albums",
   initialState: initialAlbumsState,
   reducers: {
     resetAlbums: () => initialAlbumsState,
@@ -41,8 +45,12 @@ export const albumsSlice = createSlice({
         state.error = false;
       })
       .addCase(fetchAlbums.fulfilled, (state, action) => {
-        state.data = action.payload.albums;
-        state.pages = action.payload.pages;
+        const {
+          payload: { albums, pages, tags },
+        } = action;
+        state.data = albums;
+        state.pages = pages;
+        state.tags = tags;
         state.loading = false;
       })
       .addCase(fetchAlbums.rejected, (state, action) => {

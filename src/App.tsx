@@ -1,9 +1,9 @@
-import Container from "react-bootstrap/Container";
-
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
-import HomePage from "./pages/HomePage";
+import Container from "react-bootstrap/Container";
+
 import Albums from "./pages/Albums";
+import HomePage from "./pages/HomePage";
 import NavBar from "./components/NavBar";
 
 function App() {
