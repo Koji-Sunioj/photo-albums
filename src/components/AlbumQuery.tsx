@@ -1,7 +1,5 @@
-import { AlbumQueryProps } from "../utils/types";
-
-import { StateProps } from "../utils/types";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { AlbumQueryProps, StateProps } from "../utils/types";
 
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/esm/Row";
@@ -10,7 +8,12 @@ import Button from "react-bootstrap/esm/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import Collapse from "react-bootstrap/esm/Collapse";
 
-const AlbumQuery = ({ filter, mutateParams }: AlbumQueryProps) => {
+const AlbumQuery = ({
+  filter,
+  mutateParams,
+  createQuery,
+}: // queryRef,
+AlbumQueryProps) => {
   const { type, sort, direction } = filter;
 
   const {
@@ -18,10 +21,6 @@ const AlbumQuery = ({ filter, mutateParams }: AlbumQueryProps) => {
     // filter: { type },
     filterToggle: { filterDisplay },
   } = useSelector((state: StateProps) => state);
-
-  const createQuery = () => {
-    // event.preventDefault();
-  };
 
   return (
     <Collapse in={filterDisplay}>
@@ -61,10 +60,16 @@ const AlbumQuery = ({ filter, mutateParams }: AlbumQueryProps) => {
             </div>
           </Col>
           <Col lg={3} className="mb-2">
-            <Form>
+            <Form onSubmit={createQuery}>
               <Form.Label>Search</Form.Label>
               <InputGroup>
-                <Button type="submit">Go</Button>
+                <Button
+                  // ref={queryRef}
+
+                  type="submit"
+                >
+                  Go
+                </Button>
                 {type === "text" && (
                   <Form.Control
                     name="filter"

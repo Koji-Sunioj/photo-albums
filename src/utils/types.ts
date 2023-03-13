@@ -1,5 +1,7 @@
 import { store } from "../redux/store";
 
+import * as React from "react";
+
 export type StateType = typeof store.getState;
 export type AppDispatch = typeof store.dispatch;
 
@@ -64,9 +66,15 @@ export type AlbumListProps = {
 export type AlbumQueryProps = {
   filter: FilterStateProps;
   mutateParams: mutateParamsProps;
+  createQuery: createQuery;
+  // queryRef: ButtonRef;
 };
 
+export type ButtonRef = HTMLButtonElement | null;
+
 export type mutateParamsProps = (newValues: {}, origin?: null | string) => void;
+
+export type createQuery = (event: React.FormEvent<HTMLFormElement>) => void;
 
 export type AlbumPaginationProps = {
   filter: FilterStateProps;

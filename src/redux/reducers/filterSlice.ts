@@ -10,7 +10,7 @@ export const initialFilterState: FilterStateProps = {
 };
 
 export const filterSlice = createSlice({
-  name: "metrics",
+  name: "filter",
   initialState: initialFilterState,
   reducers: {
     resetFilter: () => initialFilterState,
