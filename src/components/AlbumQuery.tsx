@@ -12,15 +12,21 @@ const AlbumQuery = ({
   filter,
   mutateParams,
   createQuery,
+  queryRef,
+  searchDisable,
 }: // queryRef,
+// queryRef,
 AlbumQueryProps) => {
-  const { type, sort, direction } = filter;
+  const { type, sort, direction, query } = filter;
 
   const {
     albums: { pages, tags },
     // filter: { type },
     filterToggle: { filterDisplay },
   } = useSelector((state: StateProps) => state);
+
+  const shouldDisabled =
+    (type === "text" && !filter.hasOwnProperty("query")) || type === "tags";
 
   return (
     <Collapse in={filterDisplay}>
@@ -63,11 +69,7 @@ AlbumQueryProps) => {
             <Form onSubmit={createQuery}>
               <Form.Label>Search</Form.Label>
               <InputGroup>
-                <Button
-                  // ref={queryRef}
-
-                  type="submit"
-                >
+                <Button ref={queryRef} type="submit" disabled={shouldDisabled}>
                   Go
                 </Button>
                 {type === "text" && (
@@ -75,7 +77,9 @@ AlbumQueryProps) => {
                     name="filter"
                     id="filter"
                     type="text"
+                    defaultValue={query}
                     placeholder="nature, israel, photography..."
+                    onChange={searchDisable}
                   />
                 )}
                 {type === "tags" && (
@@ -137,6 +141,33 @@ AlbumQueryProps) => {
             </Form.Select>
           </Col>
         </Row>
+        {type === "tags" && query !== undefined && query!.length > 0 && (
+          <Row className="mb-2">
+            <Col>
+              {query!.split(",").map((tag) => (
+                <Button
+                  variant="info"
+                  key={tag}
+                  style={{ margin: "3px" }}
+                  // onClick={() => {
+                  //   const currentQuery = query!.split(",");
+                  //   const index = currentQuery.indexOf(tag);
+                  //   currentQuery.splice(index, 1);
+                  //   let mutateObject = { page: 1 };
+                  //   if (currentQuery.length === 0) {
+                  //     delete queryParams.query;
+                  //   } else {
+                  //     mutateObject.query = currentQuery.join(",");
+                  //   }
+                  //   mutateParams(mutateObject);
+                  // }}
+                >
+                  {tag}
+                </Button>
+              ))}
+            </Col>
+          </Row>
+        )}
       </div>
     </Collapse>
   );

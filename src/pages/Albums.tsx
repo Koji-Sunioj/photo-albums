@@ -10,16 +10,17 @@ import {
   StateProps,
   FilterStateProps,
   AppDispatch,
-  ButtonRef,
+  // ButtonRef,
 } from "../utils/types";
 
+import Button from "react-bootstrap/esm/Button";
 import AlbumList from "../components/AlbumList";
 import AlbumQuery from "../components/AlbumQuery";
 import AlbumsSkeletons from "../components/AlbumsSkeletons";
 import AlbumsPagination from "../components/AlbumsPagination";
 
 const Albums = () => {
-  // const queryRef = useRef<ButtonRef>(null);
+  const queryRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [searchParams, setSearchParams] = useSearchParams();
   const {
@@ -55,26 +56,54 @@ const Albums = () => {
         queryParams[item as keyof FilterStateProps] !==
         filter[item as keyof FilterStateProps]
     );
+    // console.log(queryParams);
+    // console.log(filter);
+
     if (data === null && !loading && !error) {
       setSearchParams(queryParams);
       dispatch(setFilter(queryParams));
       dispatch(fetchAlbums(queryParams));
     } else if (isMutated) {
+      console.log("mutated effecting");
+      console.log("new params ", queryParams);
+      console.log("old filter ", filter);
       dispatch(setFilter(queryParams));
       dispatch(fetchAlbums(queryParams));
     } else if (queryParams.type !== filter.type) {
+      console.log("query effecting");
+
+      if (
+        !queryParams.hasOwnProperty("query") &&
+        filter.hasOwnProperty("query")
+      ) {
+        dispatch(fetchAlbums(queryParams));
+      }
+
+      console.log("new params ", queryParams);
+      console.log("old filter ", filter);
       dispatch(setFilter(queryParams));
     }
   }, [searchParams, filter, data]);
 
-  const mutateParams = (newValues: {}, origin: null | string = null) => {
+  const mutateParams = (
+    newValues: { query?: string | null; page?: number },
+    origin: null | string = null
+  ) => {
+    // if (newValues.query === null) {
+    //   delete newValues.query;
+    //   delete queryParams.query;
+    // }
+
+    console.log("mutating");
     Object.assign(queryParams, newValues);
     const shoulResetQuery =
       origin === "radio" && queryParams.hasOwnProperty("query");
-    if (shoulResetQuery) {
+    const hasQuery = tags?.includes(query);
+    if (shoulResetQuery && !hasQuery) {
       delete queryParams.query;
       queryParams.page = "1";
     }
+
     setSearchParams(queryParams);
   };
 
@@ -99,6 +128,24 @@ const Albums = () => {
         return null;
     }
   };
+
+  const searchDisable = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    if (value.length === 0) {
+      queryRef.current!.setAttribute("disabled", "true");
+      if (query.length > 0) {
+        delete queryParams.query;
+        console.log("deleting query");
+        mutateParams({ page: 1 });
+        // dispatch(setFilter(queryParams));
+      }
+    } else {
+      queryRef.current!.removeAttribute("disabled");
+    }
+  };
+
   const shouldRender = data !== null && data.length > 0;
   const shouldLoad = data === null && loading;
   const shouldNoQuery = data !== null && data.length === 0;
@@ -106,10 +153,11 @@ const Albums = () => {
   return (
     <>
       <AlbumQuery
-        // queryRef={queryRef}
+        queryRef={queryRef}
         filter={filter}
         mutateParams={mutateParams}
         createQuery={createQuery}
+        searchDisable={searchDisable}
       />
       {shouldLoad && <AlbumsSkeletons />}
       {shouldNoQuery && <h3>No Albums match that query</h3>}

@@ -11,6 +11,3 @@ export const store = configureStore({
     filterToggle: navBarToggleSlice,
   },
 });
-
-export type AppDispatch = typeof store.dispatch;
-export type StateType = typeof store.getState;

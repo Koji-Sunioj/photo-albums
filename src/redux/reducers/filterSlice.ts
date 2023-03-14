@@ -15,7 +15,11 @@ export const filterSlice = createSlice({
   reducers: {
     resetFilter: () => initialFilterState,
     setFilter: (state, action) => {
-      return { ...state, ...action.payload };
+      const newState = { ...state, ...action.payload };
+      if (!action.payload.hasOwnProperty("query")) {
+        delete newState.query;
+      }
+      return newState;
     },
   },
 });

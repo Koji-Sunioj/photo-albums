@@ -67,10 +67,13 @@ export type AlbumQueryProps = {
   filter: FilterStateProps;
   mutateParams: mutateParamsProps;
   createQuery: createQuery;
-  // queryRef: ButtonRef;
+  queryRef: React.RefObject<HTMLButtonElement>;
+  searchDisable: searchDisable;
 };
 
-export type ButtonRef = HTMLButtonElement | null;
+export type searchDisable = (
+  event: React.ChangeEvent<HTMLInputElement>
+) => void;
 
 export type mutateParamsProps = (newValues: {}, origin?: null | string) => void;
 
