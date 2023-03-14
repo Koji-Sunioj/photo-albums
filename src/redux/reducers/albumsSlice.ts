@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import apiUrls from "../../utils/apis.json";
-import {
-  apisProps,
-  FilterStateProps,
-  AlbumStateProps,
-} from "../../utils/types";
+import { getApi } from "../../utils/getApi";
+import { FilterStateProps, AlbumStateProps } from "../../utils/types";
 
 export const fetchAlbums = createAsyncThunk(
   "fetch-albums",
@@ -13,11 +9,8 @@ export const fetchAlbums = createAsyncThunk(
     const filterString = Object.entries(filter)
       .map((param) => param.join("="))
       .join("&");
-    const apis: apisProps = apiUrls["CdkWorkshopStack"];
-    const albumsApi = Object.keys(apis).find((endPoint) =>
-      endPoint.includes("AlbumEndpoint")
-    )!;
-    const url = `${apis[albumsApi]}albums?${filterString}`;
+    const albumApi = getApi("AlbumEndpoint");
+    const url = `${albumApi}albums?${filterString}`;
     console.log("hitting: ", url);
     return await fetch(url).then((response) => response.json());
   }
