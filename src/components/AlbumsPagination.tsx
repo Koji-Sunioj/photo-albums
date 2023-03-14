@@ -8,7 +8,9 @@ const AlbumsPagination = ({
   mutateParams,
 }: AlbumPaginationProps) => {
   const { page } = filter;
-  const pagesMap = new Array(Number(pages)).fill(null).map((v, n) => n + 1);
+  const pagesMap = new Array(Number(pages))
+    .fill(null)
+    .map((v, n) => String(n + 1));
 
   return (
     <Pagination>
@@ -16,7 +18,7 @@ const AlbumsPagination = ({
         pagesMap.map((number) => (
           <Pagination.Item
             key={number}
-            active={number === Number(page)}
+            active={number === page}
             onClick={() => {
               mutateParams({ page: number });
               window.scrollTo(0, 0);

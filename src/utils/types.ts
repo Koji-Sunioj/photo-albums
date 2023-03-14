@@ -69,15 +69,25 @@ export type AlbumQueryProps = {
   createQuery: createQuery;
   queryRef: React.RefObject<HTMLButtonElement>;
   searchDisable: searchDisable;
+  checkTags: searchDisable;
+  loading: boolean;
+  removeTags: removeTags;
+  changeSelect: changeSelect;
 };
 
 export type searchDisable = (
   event: React.ChangeEvent<HTMLInputElement>
 ) => void;
 
+export type changeSelect = (
+  event: React.ChangeEvent<HTMLSelectElement>
+) => void;
+
 export type mutateParamsProps = (newValues: {}, origin?: null | string) => void;
 
 export type createQuery = (event: React.FormEvent<HTMLFormElement>) => void;
+
+export type removeTags = (tag: string) => void;
 
 export type AlbumPaginationProps = {
   filter: FilterStateProps;

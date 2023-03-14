@@ -1,7 +1,6 @@
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
-
 import * as React from "react";
+import { useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setFilter } from "../redux/reducers/filterSlice";
@@ -10,10 +9,9 @@ import {
   StateProps,
   FilterStateProps,
   AppDispatch,
-  // ButtonRef,
+  mutateParamsProps,
 } from "../utils/types";
 
-import Button from "react-bootstrap/esm/Button";
 import AlbumList from "../components/AlbumList";
 import AlbumQuery from "../components/AlbumQuery";
 import AlbumsSkeletons from "../components/AlbumsSkeletons";
@@ -39,16 +37,7 @@ const Albums = () => {
     queryParams.query = query;
   }
 
-  const { page, direction, sort, type } = queryParams;
-
-  /*
-  if a user changes a filter, the state should:
-    update the query params
-    update the albums
-    and the filter
-
-
-  */
+  const { type } = queryParams;
 
   useEffect(() => {
     const isMutated = ["page", "direction", "sort", "query"].some(
@@ -56,55 +45,46 @@ const Albums = () => {
         queryParams[item as keyof FilterStateProps] !==
         filter[item as keyof FilterStateProps]
     );
-    // console.log(queryParams);
-    // console.log(filter);
-
     if (data === null && !loading && !error) {
       setSearchParams(queryParams);
       dispatch(setFilter(queryParams));
       dispatch(fetchAlbums(queryParams));
     } else if (isMutated) {
-      console.log("mutated effecting");
-      console.log("new params ", queryParams);
-      console.log("old filter ", filter);
       dispatch(setFilter(queryParams));
       dispatch(fetchAlbums(queryParams));
     } else if (queryParams.type !== filter.type) {
-      console.log("query effecting");
-
-      if (
-        !queryParams.hasOwnProperty("query") &&
-        filter.hasOwnProperty("query")
-      ) {
-        dispatch(fetchAlbums(queryParams));
-      }
-
-      console.log("new params ", queryParams);
-      console.log("old filter ", filter);
+      const queryMismatch =
+        !queryParams.hasOwnProperty("query") && filter.hasOwnProperty("query");
+      queryMismatch && dispatch(fetchAlbums(queryParams));
       dispatch(setFilter(queryParams));
     }
-  }, [searchParams, filter, data]);
+  });
 
-  const mutateParams = (
-    newValues: { query?: string | null; page?: number },
-    origin: null | string = null
-  ) => {
-    // if (newValues.query === null) {
-    //   delete newValues.query;
-    //   delete queryParams.query;
-    // }
-
-    console.log("mutating");
+  const mutateParams: mutateParamsProps = (newValues, origin) => {
     Object.assign(queryParams, newValues);
     const shoulResetQuery =
       origin === "radio" && queryParams.hasOwnProperty("query");
     const hasQuery = tags?.includes(query);
-    if (shoulResetQuery && !hasQuery) {
+
+    if ((shoulResetQuery && !hasQuery) || queryParams.query === null) {
       delete queryParams.query;
       queryParams.page = "1";
     }
-
     setSearchParams(queryParams);
+  };
+
+  const searchDisable = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = event;
+    const emptyInput = value.length === 0;
+    emptyInput
+      ? queryRef.current!.setAttribute("disabled", "true")
+      : queryRef.current!.removeAttribute("disabled");
+
+    if (query.length > 0 && emptyInput) {
+      mutateParams({ query: null });
+    }
   };
 
   const createQuery = (event: React.FormEvent<HTMLFormElement>) => {
@@ -116,51 +96,67 @@ const Albums = () => {
     } = event;
     switch (type) {
       case "text":
-        mutateParams({ query: value, page: 1 });
+        mutateParams({ query: value, page: "1" });
         break;
-      // case "tags":
-      //   const refined = query.length > 0 ? `${query},${filter}` : filter;
-      //   document.getElementById("filter").value = "";
-      //   queryRef.current.setAttribute("disabled", true);
-      //   mutateParams({ query: refined, page: 1 });
-      //   break;
+      case "tags":
+        const refined = query.length > 0 ? `${query},${value}` : value;
+        (document.getElementById("filter")! as HTMLButtonElement).value = "";
+        queryRef.current!.setAttribute("disabled", "true");
+        mutateParams({ query: refined, page: "1" });
+        break;
       default:
         return null;
     }
   };
 
-  const searchDisable = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const checkTags = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
-    if (value.length === 0) {
-      queryRef.current!.setAttribute("disabled", "true");
-      if (query.length > 0) {
-        delete queryParams.query;
-        console.log("deleting query");
-        mutateParams({ page: 1 });
-        // dispatch(setFilter(queryParams));
-      }
-    } else {
-      queryRef.current!.removeAttribute("disabled");
-    }
+    value.length === 0 && queryRef.current!.setAttribute("disabled", "true");
+    tags!.includes(value) && queryRef.current!.removeAttribute("disabled");
   };
 
-  const shouldRender = data !== null && data.length > 0;
+  const removeTags = (tag: string) => {
+    const currentQuery = query!.split(",");
+    const index = currentQuery.indexOf(tag);
+    currentQuery.splice(index, 1);
+    let mutateObject: { page: string; query?: string | null } = { page: "1" };
+    currentQuery.length === 0
+      ? mutateParams({ ...mutateObject, query: null })
+      : mutateParams({ ...mutateObject, query: currentQuery.join(",") });
+  };
+
+  const changeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { name, value },
+    } = event;
+    const newParam: { [index: string]: string } = {};
+    newParam[name] = value;
+    mutateParams(newParam);
+  };
+
   const shouldLoad = data === null && loading;
+  const shouldError = error && message!.length > 0;
+  const shouldRender = data !== null && data.length > 0;
   const shouldNoQuery = data !== null && data.length === 0;
 
   return (
     <>
       <AlbumQuery
+        changeSelect={changeSelect}
+        checkTags={checkTags}
         queryRef={queryRef}
         filter={filter}
         mutateParams={mutateParams}
         createQuery={createQuery}
         searchDisable={searchDisable}
+        loading={loading}
+        removeTags={removeTags}
       />
       {shouldLoad && <AlbumsSkeletons />}
       {shouldNoQuery && <h3>No Albums match that query</h3>}
+      {shouldError && <h3>{message}</h3>}
       {shouldRender && (
         <>
           <AlbumList albums={data} query={query} mutateParams={mutateParams} />

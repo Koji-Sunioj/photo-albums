@@ -54,6 +54,7 @@ export const albumsSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchAlbums.rejected, (state, action) => {
+        state.message = "server error in fetch";
         state.loading = false;
         state.error = true;
       });

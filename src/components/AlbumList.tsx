@@ -41,16 +41,21 @@ const AlbumList = ({ albums, mutateParams, query }: AlbumListProps) => {
                     </Card.Text>
                     {tags.map((tag) => (
                       <Button
+                        style={{
+                          pointerEvents: query.split(",").includes(tag)
+                            ? "none"
+                            : "auto",
+                          margin: "3px",
+                        }}
                         variant="info"
                         key={tag}
-                        style={{ margin: "3px" }}
                         onClick={() => {
                           const queryString =
                             query.length > 0 ? `${query},${tag}` : tag;
                           mutateParams({
                             query: queryString,
                             type: "tags",
-                            page: 1,
+                            page: "1",
                           });
                         }}
                       >
