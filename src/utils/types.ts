@@ -9,6 +9,7 @@ export type StateProps = {
   albums: AlbumStateProps;
   filter: FilterStateProps;
   filterToggle: NavBarToggleProps;
+  auth: AuthType;
 };
 
 export type childrenProps = {
@@ -17,6 +18,15 @@ export type childrenProps = {
 
 export type apisProps = {
   [index: string]: string;
+};
+
+export type AuthType = {
+  userName: null | string;
+  AccessToken: null | string;
+  expires: null | number;
+  loading: boolean;
+  error: boolean;
+  message: null | string;
 };
 
 export type AlbumType = {

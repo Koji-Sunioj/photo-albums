@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialToggleState = {
+import { NavBarToggleProps } from "../../utils/types";
+
+const initialToggleState: NavBarToggleProps = {
   toggleDisplay: false,
   filterDisplay: false,
 };

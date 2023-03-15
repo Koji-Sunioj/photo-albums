@@ -14,12 +14,13 @@ import Container from "react-bootstrap/Container";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
-function NavBar() {
+const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const {
     filterToggle: { filterDisplay, toggleDisplay },
     filter,
+    auth: { AccessToken },
   } = useSelector((state: StateProps) => state);
   const { pathname } = useLocation();
 
@@ -54,6 +55,15 @@ function NavBar() {
             >
               Photo Albums
             </Nav.Link>
+            {AccessToken === null ? (
+              <Nav.Link as={Link} to="/sign-in">
+                Sign in
+              </Nav.Link>
+            ) : (
+              <Nav.Link as={Link} to="/my-account">
+                My account
+              </Nav.Link>
+            )}
           </Nav>
           <Nav>
             {toggleDisplay && (
@@ -74,6 +84,6 @@ function NavBar() {
       </Container>
     </Navbar>
   );
-}
+};
 
 export default NavBar;
