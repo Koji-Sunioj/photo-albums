@@ -19,6 +19,10 @@ function App() {
           <Route path="/albums" element={<Albums />} />
           <Route path="/sign-in" element={<Auth page={"sign-in"} />} />
           <Route path="/my-account" element={<Auth page={"my-account"} />} />
+          <Route
+            path="/my-account/reset-password"
+            element={<Auth page={"reset-password"} />}
+          />
         </Routes>
       </Container>
     </BrowserRouter>

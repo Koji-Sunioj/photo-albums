@@ -14,6 +14,19 @@ export const signIn = createAsyncThunk(
   }
 );
 
+export const resetPassword = createAsyncThunk(
+  "reset-password",
+  async (userParams: { password: string; email: string; token: string }) => {
+    const signUpApi = getApi("SignUpEndpoint");
+    const { email, password, token } = userParams;
+    return await fetch(`${signUpApi}auth/${email}?task=reset`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ password: password }),
+    }).then((response) => response.json());
+  }
+);
+
 const initialAuthState: AuthType = {
   userName: null,
   AccessToken: null,
@@ -21,6 +34,7 @@ const initialAuthState: AuthType = {
   loading: false,
   error: false,
   message: null,
+  patched: false,
 };
 
 export const userSlice = createSlice({
@@ -28,10 +42,36 @@ export const userSlice = createSlice({
   initialState: initialAuthState,
   reducers: {
     resetUser: () => initialAuthState,
+    resetPatch: (state) => {
+      state.patched = false;
+      state.message = null;
+    },
+    setMessage: (state, action) => {
+      const {
+        payload: { variant, value },
+      } = action;
+      state.message = { variant: variant, value: value };
+    },
   },
   extraReducers(builder) {
     builder
+      .addCase(resetPassword.pending, (state) => {
+        state.message = null;
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.message = { variant: "success", value: "successfully updated" };
+        state.loading = false;
+        state.patched = true;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.error = true;
+      })
       .addCase(signIn.pending, (state) => {
+        state.message = null;
         state.loading = true;
         state.error = false;
       })
@@ -45,12 +85,11 @@ export const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(signIn.rejected, (state, action) => {
-        state.message = "server error in fetch";
         state.loading = false;
         state.error = true;
       });
   },
 });
 
-export const { resetUser } = userSlice.actions;
+export const { resetUser, resetPatch, setMessage } = userSlice.actions;
 export default userSlice.reducer;

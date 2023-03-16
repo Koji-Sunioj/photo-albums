@@ -26,7 +26,8 @@ export type AuthType = {
   expires: null | number;
   loading: boolean;
   error: boolean;
-  message: null | string;
+  message: null | { variant: string; value: string };
+  patched: boolean;
 };
 
 export type AlbumType = {
