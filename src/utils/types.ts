@@ -28,6 +28,7 @@ export type AuthType = {
   error: boolean;
   message: null | { variant: string; value: string };
   patched: boolean;
+  verified: boolean;
 };
 
 export type AlbumType = {
