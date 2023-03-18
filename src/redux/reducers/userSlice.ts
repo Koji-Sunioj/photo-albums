@@ -8,7 +8,6 @@ const signUpApi = getApi("SignUpEndpoint");
 export const signIn = createAsyncThunk(
   "sign-in",
   async (userParams: { userName: string; password: string }) => {
-    const signUpApi = getApi("SignUpEndpoint");
     const request = await fetch(`${signUpApi}auth`, {
       method: "POST",
       body: JSON.stringify(userParams),
@@ -23,24 +22,32 @@ export const signIn = createAsyncThunk(
 export const resetPassword = createAsyncThunk(
   "reset-password",
   async (userParams: { password: string; email: string; token: string }) => {
-    const signUpApi = getApi("SignUpEndpoint");
     const { email, password, token } = userParams;
-    return await fetch(`${signUpApi}auth/${email}?task=reset`, {
+    const request = await fetch(`${signUpApi}auth/${email}?task=reset`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({ password: password }),
-    }).then((response) => response.json());
+    });
+    if (!request.ok) {
+      throw new Error("authentication failed");
+    }
+    return await request.json();
   }
 );
 
 export const verifyToken = createAsyncThunk(
   "verify-token",
   async (userParams: { userName: string; token: string }) => {
+    console.log("hitting api");
     const { userName, token } = userParams;
-    return await fetch(`${signUpApi}auth/${userName}`, {
+    const request = await fetch(`${signUpApi}auth/${userName}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
-    }).then((response) => response.json());
+    });
+    const { type } = await request.json();
+    if (!request.ok || type === "guest") {
+      throw new Error("invalid token failed");
+    }
   }
 );
 
@@ -53,6 +60,7 @@ const initialAuthState: AuthType = {
   message: null,
   patched: false,
   verified: false,
+  counter: null,
 };
 
 export const userSlice = createSlice({
@@ -74,6 +82,7 @@ export const userSlice = createSlice({
       state.message = { variant: variant, value: value };
     },
     setFromVerify: (state, action) => {
+      console.log("set from verify");
       const {
         payload: { AccessToken, expires, userName },
       } = action;
@@ -109,12 +118,17 @@ export const userSlice = createSlice({
         const {
           payload: { userName, AccessToken, expires },
         } = action;
+        const something = Date.now() - Number(expires);
+        console.log(something);
+        // const somethingelse = something
+
         state.message = { variant: "success", value: "successfully signed in" };
         state.userName = userName;
         state.AccessToken = AccessToken;
         state.expires = Date.now() + expires * 1000;
         state.loading = false;
         state.verified = true;
+        state.counter = Math.trunc(something / 1000);
       })
       .addCase(signIn.rejected, (state, action) => {
         state.message = {

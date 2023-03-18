@@ -27,7 +27,6 @@ const SignIn = () => {
       setTimeout(() => {
         ["AccessToken", "expires", "userName"].forEach((item) => {
           const value = auth[item as keyof AuthType];
-          console.log(value);
           localStorage.setItem(item, String(value)!);
         });
         dispatch(resetMessage());

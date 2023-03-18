@@ -18,6 +18,8 @@ import AlbumsSkeletons from "../components/AlbumsSkeletons";
 import AlbumsPagination from "../components/AlbumsPagination";
 
 const Albums = () => {
+  console.log("rendered");
+
   const queryRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [searchParams, setSearchParams] = useSearchParams();

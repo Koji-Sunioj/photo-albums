@@ -1,10 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   displayFilter,
   displayToggle,
 } from "../redux/reducers/navBarToggleSlice";
+import {
+  verifyToken,
+  setFromVerify,
+  resetUser,
+} from "../redux/reducers/userSlice";
+
 import { useSelector, useDispatch } from "react-redux";
 import { StateProps, AppDispatch } from "../utils/types";
 
@@ -16,19 +22,77 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  // const [counter, setCounter] = useState<null | number>(null);
   const dispatch = useDispatch<AppDispatch>();
+
   const {
     filterToggle: { filterDisplay, toggleDisplay },
     filter,
-    auth: { AccessToken },
+    auth: { verified, counter },
+    auth,
   } = useSelector((state: StateProps) => state);
   const { pathname } = useLocation();
+  const expires = localStorage.getItem("expires");
+  const userName = localStorage.getItem("userName");
+  const AccessToken = localStorage.getItem("AccessToken");
+
+  const shouldVerify =
+    !verified &&
+    AccessToken !== null &&
+    Number(expires) > Date.now() &&
+    auth.AccessToken === null;
+  const shouldRevoke = AccessToken !== null && Number(expires) < Date.now();
+  const isVerified =
+    verified &&
+    AccessToken !== null &&
+    !window.location.href.includes("sign-in") &&
+    auth.AccessToken === null;
 
   useEffect(() => {
     pathname === "/albums"
       ? dispatch(displayToggle(true))
       : dispatch(displayToggle(false));
+
+    shouldRevoke &&
+      ["AccessToken", "expires", "userName"].forEach((item) => {
+        localStorage.removeItem(item);
+      });
+    shouldVerify &&
+      dispatch(verifyToken({ userName: userName!, token: AccessToken! }));
+
+    isVerified &&
+      dispatch(
+        setFromVerify({
+          userName: userName!,
+          token: AccessToken,
+          expires: expires,
+        })
+      );
+    // if (auth.AccessToken !== null && counter === null) {
+    //   const number = Number(auth.expires!) - Date.now();
+    //   console.log(number);
+    //   setCounter(Math.trunc(number / 1000));
+    // }
+
+    // if (counter === 0) {
+    //   setCounter(null);
+    //   ["AccessToken", "expires", "userName"].forEach((item) => {
+    //     localStorage.removeItem(item);
+    //   });
+    //   dispatch(resetUser());
+    //   navigate("/");
+    // }
+
+    // if (auth.AccessToken !== null && counter !== null) {
+    //   const interval = setInterval(() => {
+    //     setCounter(counter - 1);
+    //   }, 1000);
+
+    //   return () => clearInterval(interval);
+    // }
   }, [pathname]);
+
+  console.log(counter);
 
   return (
     <Navbar bg="dark" expand="lg" variant="dark" className="mb-3">
@@ -55,13 +119,13 @@ const NavBar = () => {
             >
               Photo Albums
             </Nav.Link>
-            {AccessToken === null ? (
-              <Nav.Link as={Link} to="/sign-in">
-                Sign in
-              </Nav.Link>
-            ) : (
+            {verified ? (
               <Nav.Link as={Link} to="/my-account">
                 My account
+              </Nav.Link>
+            ) : (
+              <Nav.Link as={Link} to="/sign-in">
+                Sign in
               </Nav.Link>
             )}
           </Nav>

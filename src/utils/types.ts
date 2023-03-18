@@ -29,6 +29,7 @@ export type AuthType = {
   message: null | { variant: string; value: string };
   patched: boolean;
   verified: boolean;
+  counter: null | number;
 };
 
 export type AlbumType = {
