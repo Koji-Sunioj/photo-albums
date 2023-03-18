@@ -7,6 +7,7 @@ import {
   forgotPassword,
   setMessage,
   confirmForgotPassword,
+  resetUser,
 } from "../redux/reducers/userSlice";
 
 import Col from "react-bootstrap/Col";
@@ -25,7 +26,10 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     if (patched === "reset") {
-      navigate("/sign-in");
+      dispatch(resetUser());
+      navigate("/sign-in", {
+        state: { message: "successfully reset password", variant: "success" },
+      });
     }
   });
 
@@ -60,8 +64,6 @@ const ForgotPassword = () => {
       })
     );
   };
-
-  console.log(userName, patched);
 
   const shouldMessage = message !== null && message.hasOwnProperty("variant");
 

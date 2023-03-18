@@ -130,7 +130,6 @@ export const userSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(confirmForgotPassword.fulfilled, (state) => {
-        state.message = { variant: "success", value: "successfully updated" };
         state.loading = false;
         state.patched = "reset";
       })

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { StateProps, AppDispatch, AuthType } from "../utils/types";
@@ -17,6 +17,7 @@ const SignIn = () => {
     auth,
   } = useSelector((state: StateProps) => state);
   const navigate = useNavigate();
+  const { state } = useLocation();
   const [flow, setFlow] = useState("init");
   const dispatch = useDispatch<AppDispatch>();
 
@@ -49,6 +50,8 @@ const SignIn = () => {
     dispatch(signIn({ userName: userName, password: password }));
   };
 
+  const shouldMessage = state !== null && state.hasOwnProperty("variant");
+
   return (
     <Row>
       <Col lg="4">
@@ -68,6 +71,9 @@ const SignIn = () => {
         <br />
         {message !== null && (
           <Alert variant={message.variant}>{message.value}</Alert>
+        )}
+        {shouldMessage && (
+          <Alert variant={state.variant}>{state.message}</Alert>
         )}
       </Col>
     </Row>
