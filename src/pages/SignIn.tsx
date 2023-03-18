@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -18,10 +18,9 @@ const SignIn = () => {
   } = useSelector((state: StateProps) => state);
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [flow, setFlow] = useState("init");
   const dispatch = useDispatch<AppDispatch>();
 
-  const shouldRedirect = AccessToken !== null && flow === "redirect";
+  const shouldRedirect = AccessToken !== null && message !== null;
 
   useEffect(() => {
     shouldRedirect &&
@@ -32,9 +31,8 @@ const SignIn = () => {
         });
         dispatch(resetMessage());
         navigate("/", {
-          state: { message: "successfully signed in", variant: "success" },
+          state: message,
         });
-        setFlow("init");
       })();
   });
 
@@ -46,11 +44,11 @@ const SignIn = () => {
         password: { value: password },
       },
     } = event;
-    setFlow("redirect");
     dispatch(signIn({ userName: userName, password: password }));
   };
 
-  const shouldMessage = state !== null && state.hasOwnProperty("variant");
+  const signInMessage =
+    message !== null ? message : state !== null ? state : null;
 
   return (
     <Row>
@@ -61,19 +59,16 @@ const SignIn = () => {
           authHandler={initiateAuth}
           page={"sign-in"}
         />
-        <Link className="mb-3" to={"/sign-up"}>
-          Don't have an account yet? Sign up!
-        </Link>
-        <br />
-        <Link className="mb-3" to={"forgot-password"}>
-          Forgot password?
-        </Link>
-        <br />
-        {message !== null && (
-          <Alert variant={message.variant}>{message.value}</Alert>
-        )}
-        {shouldMessage && (
-          <Alert variant={state.variant}>{state.message}</Alert>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Link className="mb-2" to={"/sign-up"}>
+            Don't have an account yet? Sign up!
+          </Link>
+          <Link className="mb-2" to={"forgot-password"}>
+            Forgot password?
+          </Link>
+        </div>
+        {signInMessage !== null && (
+          <Alert variant={signInMessage.variant}>{signInMessage.value}</Alert>
         )}
       </Col>
     </Row>

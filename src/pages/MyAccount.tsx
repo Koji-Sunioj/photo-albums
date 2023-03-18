@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -13,33 +12,23 @@ import Button from "react-bootstrap/Button";
 
 const MyAccount = () => {
   const {
-    auth: { AccessToken, userName },
+    auth: { userName },
   } = useSelector((state: StateProps) => state);
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [flow, setFlow] = useState("init");
   const dispatch = useDispatch<AppDispatch>();
 
-  const shouldSignOut = AccessToken !== null && flow === "sign-out";
-  const shouldMessage = state !== null && state.hasOwnProperty("variant");
-
-  useEffect(() => {
-    shouldSignOut &&
-      (() => {
-        ["AccessToken", "expires", "userName"].forEach((item) => {
-          localStorage.removeItem(item);
-        });
-        dispatch(resetUser());
-        navigate("/", {
-          state: { message: "successfully signed out", variant: "info" },
-        });
-        setFlow("init");
-      })();
-  });
-
   const signOut = () => {
-    setFlow("sign-out");
+    ["AccessToken", "expires", "userName"].forEach((item) => {
+      localStorage.removeItem(item);
+    });
+    dispatch(resetUser());
+    navigate("/", {
+      state: { value: "successfully signed out", variant: "info" },
+    });
   };
+
+  const shouldMessage = state !== null && state.hasOwnProperty("variant");
 
   return (
     <Row>
@@ -51,9 +40,7 @@ const MyAccount = () => {
           </Link>
           <Button onClick={signOut}>Sign Out</Button>
         </Stack>
-        {shouldMessage && (
-          <Alert variant={state.variant}>{state.message}</Alert>
-        )}
+        {shouldMessage && <Alert variant={state.variant}>{state.value}</Alert>}
       </Col>
     </Row>
   );

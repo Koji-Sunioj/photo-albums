@@ -30,7 +30,7 @@ const ResetPassword = () => {
       (() => {
         dispatch(resetPatch());
         navigate("/my-account", {
-          state: { message: "successfully reset password", variant: "success" },
+          state: message,
         });
       })();
   });

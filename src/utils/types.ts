@@ -25,7 +25,6 @@ export type AuthType = {
   AccessToken: null | string;
   expires: null | number;
   loading: boolean;
-  error: boolean;
   message: null | { variant: string; value: string };
   patched: null | string;
   verified: boolean;

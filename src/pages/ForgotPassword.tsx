@@ -28,7 +28,7 @@ const ForgotPassword = () => {
     if (patched === "reset") {
       dispatch(resetUser());
       navigate("/sign-in", {
-        state: { message: "successfully reset password", variant: "success" },
+        state: message,
       });
     }
   });
@@ -68,8 +68,8 @@ const ForgotPassword = () => {
   const shouldMessage = message !== null && message.hasOwnProperty("variant");
 
   return (
-    <Col lg="4">
-      <Row>
+    <Row>
+      <Col lg="4">
         {patched === "confirmed" ? (
           <>
             <h2>Confirm new password</h2>
@@ -92,8 +92,8 @@ const ForgotPassword = () => {
         {shouldMessage && (
           <Alert variant={message.variant}>{message.value}</Alert>
         )}
-      </Row>
-    </Col>
+      </Col>
+    </Row>
   );
 };
 export default ForgotPassword;

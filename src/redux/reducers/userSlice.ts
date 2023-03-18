@@ -5,6 +5,13 @@ import { AuthType } from "../../utils/types";
 
 const signUpApi = getApi("SignUpEndpoint");
 
+const checkRequest = async (request: Response) => {
+  if (!request.ok) {
+    const { message } = await request.json();
+    throw new Error(message);
+  }
+};
+
 export const confirmForgotPassword = createAsyncThunk(
   "confirm-forgot-password",
   async (userParams: {
@@ -20,9 +27,7 @@ export const confirmForgotPassword = createAsyncThunk(
         confirmationCode: confirmation,
       }),
     });
-    if (!request.ok) {
-      throw new Error("authentication failed");
-    }
+    await checkRequest(request);
   }
 );
 
@@ -33,9 +38,7 @@ export const signIn = createAsyncThunk(
       method: "POST",
       body: JSON.stringify(userParams),
     });
-    if (!request.ok) {
-      throw new Error("authentication failed");
-    }
+    await checkRequest(request);
     return await request.json();
   }
 );
@@ -47,10 +50,7 @@ export const forgotPassword = createAsyncThunk(
     const request = await fetch(`${signUpApi}auth/${email}`, {
       method: "HEAD",
     });
-    console.log(request);
-    if (!request.ok) {
-      throw new Error("no email found");
-    }
+    await checkRequest(request);
     return { email: email };
   }
 );
@@ -64,9 +64,7 @@ export const resetPassword = createAsyncThunk(
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({ password: password }),
     });
-    if (!request.ok) {
-      throw new Error("authentication failed");
-    }
+    await checkRequest(request);
     return await request.json();
   }
 );
@@ -92,7 +90,6 @@ const initialAuthState: AuthType = {
   AccessToken: null,
   expires: null,
   loading: false,
-  error: false,
   message: null,
   patched: null,
   verified: false,
@@ -132,6 +129,17 @@ export const userSlice = createSlice({
       .addCase(confirmForgotPassword.fulfilled, (state) => {
         state.loading = false;
         state.patched = "reset";
+        state.message = {
+          variant: "success",
+          value: "successfully updated password",
+        };
+      })
+      .addCase(confirmForgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.message = {
+          variant: "danger",
+          value: action.error.message!,
+        };
       })
       .addCase(confirmForgotPassword.pending, (state) => {
         state.loading = true;
@@ -140,6 +148,17 @@ export const userSlice = createSlice({
         state.userName = action.payload.email;
         state.loading = false;
         state.patched = "confirmed";
+        state.message = {
+          variant: "success",
+          value: "a confirmation code was sent to your email",
+        };
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.message = {
+          variant: "danger",
+          value: action.error.message!,
+        };
       })
       .addCase(forgotPassword.pending, (state) => {
         state.loading = true;
@@ -150,41 +169,47 @@ export const userSlice = createSlice({
       .addCase(resetPassword.pending, (state) => {
         state.message = null;
         state.loading = true;
-        state.error = false;
       })
       .addCase(resetPassword.fulfilled, (state) => {
-        state.message = { variant: "success", value: "successfully updated" };
+        state.message = {
+          variant: "success",
+          value: "successfully updated password",
+        };
         state.loading = false;
         state.patched = "reset";
       })
       .addCase(resetPassword.rejected, (state, action) => {
+        state.message = {
+          variant: "danger",
+          value: action.error.message!,
+        };
         state.loading = false;
-        state.error = true;
       })
       .addCase(signIn.pending, (state) => {
         state.message = null;
         state.loading = true;
-        state.error = false;
       })
       .addCase(signIn.fulfilled, (state, action) => {
         const {
           payload: { userName, AccessToken, expires },
         } = action;
-        state.message = { variant: "success", value: "successfully signed in" };
-        state.userName = userName;
-        state.AccessToken = AccessToken;
-        state.expires = Date.now() + expires * 1000;
-        state.loading = false;
-        state.verified = true;
-        state.counter = expires;
+        const newState = {
+          message: { variant: "success", value: "successfully signed in" },
+          userName: userName,
+          AccessToken: AccessToken,
+          expires: Date.now() + expires * 1000,
+          loading: false,
+          verified: true,
+          counter: expires,
+        };
+        return { ...state, ...newState };
       })
       .addCase(signIn.rejected, (state, action) => {
         state.message = {
           variant: "danger",
-          value: "invalid username or password",
+          value: action.error.message!,
         };
         state.loading = false;
-        state.error = true;
       });
   },
 });
