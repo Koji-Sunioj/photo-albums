@@ -1,24 +1,24 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSelector, useDispatch } from "react-redux";
-import { StateProps, AppDispatch } from "../utils/types";
 import {
   setMessage,
   resetPassword,
   resetPatch,
 } from "../redux/reducers/userSlice";
-
-import { checkPw } from "../utils/checkPw";
-import AuthForm from "../components/AuthForm";
+import { useSelector, useDispatch } from "react-redux";
+import { StateProps, AppDispatch } from "../utils/types";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Alert from "react-bootstrap/Alert";
 
+import { checkPw } from "../utils/checkPw";
+import AuthForm from "../components/AuthForm";
+
 const ResetPassword = () => {
   const {
-    auth: { AccessToken, expires, userName, loading, patched, message },
+    auth: { AccessToken, userName, loading, patched, message },
   } = useSelector((state: StateProps) => state);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -27,13 +27,15 @@ const ResetPassword = () => {
 
   useEffect(() => {
     hasReset &&
-      setTimeout(() => {
+      (() => {
         dispatch(resetPatch());
-        navigate("/my-account");
-      }, 1500);
-  }, [patched]);
+        navigate("/my-account", {
+          state: { message: "successfully reset password", variant: "success" },
+        });
+      })();
+  });
 
-  const initiateResest = (event: React.FormEvent<HTMLFormElement>) => {
+  const initiateReset = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const {
       currentTarget: {
@@ -63,7 +65,7 @@ const ResetPassword = () => {
         <h2>Reset password for {userName}</h2>
         <AuthForm
           page={"reset-password"}
-          authHandler={initiateResest}
+          authHandler={initiateReset}
           loading={loading}
         />
         {message !== null && (

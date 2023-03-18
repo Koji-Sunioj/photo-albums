@@ -23,10 +23,14 @@ const Albums = () => {
   const queryRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const {
-    albums: { data, error, message, loading, pages, tags },
-    filter,
-  } = useSelector((state: StateProps) => state);
+  // const {
+  //   albums: { data, error, message, loading, pages, tags },
+  //   filter,
+  // } = useSelector((state: StateProps) => state);
+  const { data, error, message, loading, pages, tags } = useSelector(
+    (state: StateProps) => state.albums
+  );
+  const filter = useSelector((state: StateProps) => state.filter);
 
   let queryParams: FilterStateProps = {
     page: searchParams.get("page") || "1",

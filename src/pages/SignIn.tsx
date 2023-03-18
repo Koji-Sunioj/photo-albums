@@ -24,18 +24,20 @@ const SignIn = () => {
 
   useEffect(() => {
     shouldRedirect &&
-      setTimeout(() => {
+      (() => {
         ["AccessToken", "expires", "userName"].forEach((item) => {
           const value = auth[item as keyof AuthType];
           localStorage.setItem(item, String(value)!);
         });
         dispatch(resetMessage());
-        navigate("/");
+        navigate("/", {
+          state: { message: "successfully signed in", variant: "success" },
+        });
         setFlow("init");
-      }, 1500);
-  }, [AccessToken, flow]);
+      })();
+  });
 
-  const authHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const initiateAuth = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const {
       currentTarget: {
@@ -53,7 +55,7 @@ const SignIn = () => {
         <h2>Sign In</h2>
         <AuthForm
           loading={loading}
-          authHandler={authHandler}
+          authHandler={initiateAuth}
           page={"sign-in"}
         />
         <Link className="mb-3" to={"/sign-up"}>

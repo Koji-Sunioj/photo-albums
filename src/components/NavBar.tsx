@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
@@ -6,9 +6,10 @@ import {
   displayToggle,
 } from "../redux/reducers/navBarToggleSlice";
 import {
+  resetUser,
   verifyToken,
   setFromVerify,
-  resetUser,
+  setCounter,
 } from "../redux/reducers/userSlice";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -22,7 +23,6 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  // const [counter, setCounter] = useState<null | number>(null);
   const dispatch = useDispatch<AppDispatch>();
 
   const {
@@ -66,33 +66,28 @@ const NavBar = () => {
           userName: userName!,
           token: AccessToken,
           expires: expires,
+          counter: Math.trunc((Number(expires) - Date.now()) / 1000),
         })
       );
-    // if (auth.AccessToken !== null && counter === null) {
-    //   const number = Number(auth.expires!) - Date.now();
-    //   console.log(number);
-    //   setCounter(Math.trunc(number / 1000));
-    // }
 
-    // if (counter === 0) {
-    //   setCounter(null);
-    //   ["AccessToken", "expires", "userName"].forEach((item) => {
-    //     localStorage.removeItem(item);
-    //   });
-    //   dispatch(resetUser());
-    //   navigate("/");
-    // }
+    if (counter !== null && counter <= 0) {
+      ["AccessToken", "expires", "userName"].forEach((item) => {
+        localStorage.removeItem(item);
+      });
+      dispatch(resetUser());
+      navigate("/", {
+        state: { message: "session timed out", variant: "info" },
+      });
+    }
 
-    // if (auth.AccessToken !== null && counter !== null) {
-    //   const interval = setInterval(() => {
-    //     setCounter(counter - 1);
-    //   }, 1000);
+    if (counter !== null && counter > 0) {
+      const interval = setInterval(() => {
+        dispatch(setCounter(counter - 1));
+      }, 1000);
 
-    //   return () => clearInterval(interval);
-    // }
-  }, [pathname]);
-
-  console.log(counter);
+      return () => clearInterval(interval);
+    }
+  });
 
   return (
     <Navbar bg="dark" expand="lg" variant="dark" className="mb-3">

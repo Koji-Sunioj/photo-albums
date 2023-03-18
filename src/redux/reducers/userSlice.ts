@@ -71,6 +71,9 @@ export const userSlice = createSlice({
     resetMessage: (state) => {
       state.message = null;
     },
+    setCounter: (state, action) => {
+      state.counter = action.payload;
+    },
     resetPatch: (state) => {
       state.patched = false;
       state.message = null;
@@ -82,11 +85,10 @@ export const userSlice = createSlice({
       state.message = { variant: variant, value: value };
     },
     setFromVerify: (state, action) => {
-      console.log("set from verify");
       const {
-        payload: { AccessToken, expires, userName },
+        payload: { AccessToken, expires, userName, counter },
       } = action;
-      return { ...state, AccessToken, expires, userName };
+      return { ...state, AccessToken, expires, userName, counter };
     },
   },
   extraReducers(builder) {
@@ -105,7 +107,6 @@ export const userSlice = createSlice({
         state.patched = true;
       })
       .addCase(resetPassword.rejected, (state, action) => {
-        console.log(action.payload);
         state.loading = false;
         state.error = true;
       })
@@ -118,17 +119,13 @@ export const userSlice = createSlice({
         const {
           payload: { userName, AccessToken, expires },
         } = action;
-        const something = Date.now() - Number(expires);
-        console.log(something);
-        // const somethingelse = something
-
         state.message = { variant: "success", value: "successfully signed in" };
         state.userName = userName;
         state.AccessToken = AccessToken;
         state.expires = Date.now() + expires * 1000;
         state.loading = false;
         state.verified = true;
-        state.counter = Math.trunc(something / 1000);
+        state.counter = expires;
       })
       .addCase(signIn.rejected, (state, action) => {
         state.message = {
@@ -147,5 +144,6 @@ export const {
   setMessage,
   resetMessage,
   setFromVerify,
+  setCounter,
 } = userSlice.actions;
 export default userSlice.reducer;
