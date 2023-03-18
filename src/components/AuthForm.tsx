@@ -12,7 +12,7 @@ const AuthForm = ({
 }) => (
   <Form className="mb-3" onSubmit={authHandler}>
     <fieldset disabled={loading}>
-      {page === "sign-in" && (
+      {["sign-in", "forgot-password"].includes(page) && (
         <>
           <Form.Group className="mb-3">
             <Form.Control
@@ -24,7 +24,19 @@ const AuthForm = ({
           </Form.Group>
         </>
       )}
-      {["sign-in", "reset-password"].includes(page) && (
+      {page === "confirm-forgot-password" && (
+        <Form.Group className="mb-3">
+          <Form.Control
+            type="text"
+            placeholder="confirmation code"
+            name="confirmation"
+            autoComplete="off"
+          />
+        </Form.Group>
+      )}
+      {["sign-in", "reset-password", "confirm-forgot-password"].includes(
+        page
+      ) && (
         <>
           <Form.Group className="mb-3">
             <Form.Control
@@ -36,8 +48,7 @@ const AuthForm = ({
           </Form.Group>
         </>
       )}
-
-      {page === "reset-password" && (
+      {["reset-password", "confirm-forgot-password"].includes(page) && (
         <>
           <Form.Group className="mb-3">
             <Form.Control
@@ -52,6 +63,7 @@ const AuthForm = ({
           </Form.Group>
         </>
       )}
+
       <Button variant="primary" type="submit">
         Submit
       </Button>

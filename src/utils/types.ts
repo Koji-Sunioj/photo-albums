@@ -27,7 +27,7 @@ export type AuthType = {
   loading: boolean;
   error: boolean;
   message: null | { variant: string; value: string };
-  patched: boolean;
+  patched: null | string;
   verified: boolean;
   counter: null | number;
 };

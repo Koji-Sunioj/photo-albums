@@ -23,7 +23,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const hasReset = AccessToken !== null && patched;
+  const hasReset = AccessToken !== null && patched === "reset";
 
   useEffect(() => {
     hasReset &&

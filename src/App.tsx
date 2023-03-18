@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Albums from "./pages/Albums";
 import SignIn from "./pages/SignIn";
@@ -8,6 +7,7 @@ import NavBar from "./components/NavBar";
 import MyAccount from "./pages/MyAccount";
 import ResetPassword from "./pages/ResetPassword";
 import { RemoveSlash } from "./utils/removeSlash";
+import ForgotPassword from "./pages/ForgotPassword";
 
 import Container from "react-bootstrap/Container";
 
@@ -18,6 +18,7 @@ function App() {
       <Container>
         <RemoveSlash />
         <Routes>
+          <Route path="/sign-in/forgot-password" element={<ForgotPassword />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/albums" element={<Albums />} />
           <Route path="/sign-in" element={<SignIn />} />

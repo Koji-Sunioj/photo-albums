@@ -62,7 +62,7 @@ const SignIn = () => {
           Don't have an account yet? Sign up!
         </Link>
         <br />
-        <Link className="mb-3" to={"/forgot-password"}>
+        <Link className="mb-3" to={"forgot-password"}>
           Forgot password?
         </Link>
         <br />

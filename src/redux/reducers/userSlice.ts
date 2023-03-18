@@ -5,6 +5,27 @@ import { AuthType } from "../../utils/types";
 
 const signUpApi = getApi("SignUpEndpoint");
 
+export const confirmForgotPassword = createAsyncThunk(
+  "confirm-forgot-password",
+  async (userParams: {
+    email: string;
+    password: string;
+    confirmation: string;
+  }) => {
+    const { email, password, confirmation } = userParams;
+    const request = await fetch(`${signUpApi}auth/${email}?task=forgot`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        password: password,
+        confirmationCode: confirmation,
+      }),
+    });
+    if (!request.ok) {
+      throw new Error("authentication failed");
+    }
+  }
+);
+
 export const signIn = createAsyncThunk(
   "sign-in",
   async (userParams: { userName: string; password: string }) => {
@@ -16,6 +37,21 @@ export const signIn = createAsyncThunk(
       throw new Error("authentication failed");
     }
     return await request.json();
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "forgot-password",
+  async (userParams: { email: string }) => {
+    const { email } = userParams;
+    const request = await fetch(`${signUpApi}auth/${email}`, {
+      method: "HEAD",
+    });
+    console.log(request);
+    if (!request.ok) {
+      throw new Error("no email found");
+    }
+    return { email: email };
   }
 );
 
@@ -58,7 +94,7 @@ const initialAuthState: AuthType = {
   loading: false,
   error: false,
   message: null,
-  patched: false,
+  patched: null,
   verified: false,
   counter: null,
 };
@@ -75,7 +111,7 @@ export const userSlice = createSlice({
       state.counter = action.payload;
     },
     resetPatch: (state) => {
-      state.patched = false;
+      state.patched = null;
       state.message = null;
     },
     setMessage: (state, action) => {
@@ -93,6 +129,22 @@ export const userSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(confirmForgotPassword.fulfilled, (state) => {
+        state.message = { variant: "success", value: "successfully updated" };
+        state.loading = false;
+        state.patched = "reset";
+      })
+      .addCase(confirmForgotPassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.userName = action.payload.email;
+        state.loading = false;
+        state.patched = "confirmed";
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(verifyToken.fulfilled, (state) => {
         state.verified = true;
       })
@@ -104,7 +156,7 @@ export const userSlice = createSlice({
       .addCase(resetPassword.fulfilled, (state) => {
         state.message = { variant: "success", value: "successfully updated" };
         state.loading = false;
-        state.patched = true;
+        state.patched = "reset";
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
