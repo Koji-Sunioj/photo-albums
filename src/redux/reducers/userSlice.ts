@@ -72,7 +72,6 @@ export const resetPassword = createAsyncThunk(
 export const verifyToken = createAsyncThunk(
   "verify-token",
   async (userParams: { userName: string; token: string }) => {
-    console.log("hitting api");
     const { userName, token } = userParams;
     const request = await fetch(`${signUpApi}auth/${userName}`, {
       method: "GET",
@@ -82,6 +81,34 @@ export const verifyToken = createAsyncThunk(
     if (!request.ok || type === "guest") {
       throw new Error("invalid token failed");
     }
+  }
+);
+
+export const signUp = createAsyncThunk(
+  "sign-up",
+  async (userParams: { email: string; password: string }) => {
+    const request = await fetch(`${signUpApi}sign-up`, {
+      method: "POST",
+      body: JSON.stringify(userParams),
+    });
+    await checkRequest(request);
+    const { email } = userParams;
+    return { userName: email };
+  }
+);
+
+export const confirmSignUp = createAsyncThunk(
+  "confirm-sign-up",
+  async (userParams: { userName: string; confirmation: string }) => {
+    const { userName, confirmation } = userParams;
+    const request = await fetch(`${signUpApi}sign-up`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        userName: userName,
+        confirmationCode: confirmation,
+      }),
+    });
+    await checkRequest(request);
   }
 );
 
@@ -126,6 +153,43 @@ export const userSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(confirmSignUp.fulfilled, (state) => {
+        state.loading = false;
+        state.patched = "signed";
+        state.message = {
+          variant: "success",
+          value: "successfully signed up",
+        };
+      })
+      .addCase(confirmSignUp.rejected, (state, action) => {
+        state.loading = false;
+        state.message = {
+          variant: "danger",
+          value: action.error.message!,
+        };
+      })
+      .addCase(confirmSignUp.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.userName = action.payload.userName;
+        state.loading = false;
+        state.patched = "confirmed";
+        state.message = {
+          variant: "success",
+          value: "a confirmation code was sent to your email",
+        };
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        state.loading = false;
+        state.message = {
+          variant: "danger",
+          value: action.error.message!,
+        };
+      })
+      .addCase(signUp.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(confirmForgotPassword.fulfilled, (state) => {
         state.loading = false;
         state.patched = "reset";

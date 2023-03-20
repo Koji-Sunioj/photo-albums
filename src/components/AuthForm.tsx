@@ -12,7 +12,7 @@ const AuthForm = ({
 }) => (
   <Form className="mb-3" onSubmit={authHandler}>
     <fieldset disabled={loading}>
-      {["sign-in", "forgot-password"].includes(page) && (
+      {["sign-in", "forgot-password", "sign-up"].includes(page) && (
         <Form.Group className="mb-3">
           <Form.Control
             type="email"
@@ -22,7 +22,7 @@ const AuthForm = ({
           />
         </Form.Group>
       )}
-      {page === "confirm-forgot-password" && (
+      {["confirm-forgot-password", "confirm-sign-up"].includes(page) && (
         <Form.Group className="mb-3">
           <Form.Control
             type="text"
@@ -32,9 +32,12 @@ const AuthForm = ({
           />
         </Form.Group>
       )}
-      {["sign-in", "reset-password", "confirm-forgot-password"].includes(
-        page
-      ) && (
+      {[
+        "sign-in",
+        "reset-password",
+        "confirm-forgot-password",
+        "sign-up",
+      ].includes(page) && (
         <Form.Group className="mb-3">
           <Form.Control
             type="password"
@@ -44,7 +47,9 @@ const AuthForm = ({
           />
         </Form.Group>
       )}
-      {["reset-password", "confirm-forgot-password"].includes(page) && (
+      {["reset-password", "confirm-forgot-password", "sign-up"].includes(
+        page
+      ) && (
         <Form.Group className="mb-3">
           <Form.Control
             type="password"
