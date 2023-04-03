@@ -7,7 +7,7 @@ import {
   resetPatch,
 } from "../redux/reducers/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { StateProps, AppDispatch } from "../utils/types";
+import { TAppState, AppDispatch } from "../utils/types";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -19,7 +19,7 @@ import AuthForm from "../components/AuthForm";
 const ResetPassword = () => {
   const {
     auth: { AccessToken, userName, loading, patched, message },
-  } = useSelector((state: StateProps) => state);
+  } = useSelector((state: TAppState) => state);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 

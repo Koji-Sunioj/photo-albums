@@ -1,16 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { getApi } from "../../utils/getApi";
-import { AuthType } from "../../utils/types";
+import { TAuthState } from "../../utils/types";
+
+import { checkRequest } from "../../utils/checkRequest";
 
 const signUpApi = getApi("SignUpEndpoint");
-
-const checkRequest = async (request: Response) => {
-  if (!request.ok) {
-    const { message } = await request.json();
-    throw new Error(message);
-  }
-};
 
 export const confirmForgotPassword = createAsyncThunk(
   "confirm-forgot-password",
@@ -112,7 +107,7 @@ export const confirmSignUp = createAsyncThunk(
   }
 );
 
-const initialAuthState: AuthType = {
+const initialAuthState: TAuthState = {
   userName: null,
   AccessToken: null,
   expires: null,

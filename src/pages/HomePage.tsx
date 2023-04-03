@@ -8,8 +8,6 @@ const HomePage = () => {
   const { state } = useLocation();
   const shouldMessage = state !== null && state.hasOwnProperty("variant");
 
-  console.log(state);
-
   return (
     <Row>
       <Col lg="6">

@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { FilterStateProps } from "../../utils/types";
+import { TFilterState } from "../../utils/types";
 
-export const initialFilterState: FilterStateProps = {
+export const initialFilterState: TFilterState = {
   page: "1",
   direction: "descending",
   sort: "created",

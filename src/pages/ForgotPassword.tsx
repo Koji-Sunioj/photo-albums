@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
-import { StateProps, AppDispatch } from "../utils/types";
+import { TAppState, AppDispatch } from "../utils/types";
 import {
   forgotPassword,
   setMessage,
@@ -21,7 +21,7 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, patched, message, userName } = useSelector(
-    (state: StateProps) => state.auth
+    (state: TAppState) => state.auth
   );
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 body {
+  overflow-y: scroll;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -19,3 +20,14 @@ code {
   object-position: 50% 50%;
   transition: opacity 1s ease-in-out;
 }
+
+.carousel-img {
+  height: 50vw;
+  width: auto;
+  margin-left: auto;
+  margin-right:auto;
+  object-fit: cover;
+  display: block;
+
+}
+

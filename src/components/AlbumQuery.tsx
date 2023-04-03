@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { AlbumQueryProps, StateProps } from "../utils/types";
+import { AlbumQueryProps, TAppState } from "../utils/types";
 
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/esm/Row";
@@ -24,7 +24,7 @@ const AlbumQuery = ({
   const {
     albums: { tags },
     filterToggle: { filterDisplay },
-  } = useSelector((state: StateProps) => state);
+  } = useSelector((state: TAppState) => state);
 
   const shouldDisabled =
     (type === "text" && !filter.hasOwnProperty("query")) || type === "tags";

@@ -1,10 +1,10 @@
 import { Navigate, useLocation } from "react-router-dom";
 
-import { StateProps } from "./types";
+import { TAppState } from "./types";
 import { useSelector } from "react-redux";
 
 export const RemoveSlash = () => {
-  const { filter } = useSelector((state: StateProps) => state);
+  const { filter } = useSelector((state: TAppState) => state);
   const currentLocation = useLocation();
   const { pathname } = currentLocation;
   const filterString = Object.entries(filter)

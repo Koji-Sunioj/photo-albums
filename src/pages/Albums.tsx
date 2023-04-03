@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setFilter } from "../redux/reducers/filterSlice";
 import { fetchAlbums } from "../redux/reducers/albumsSlice";
 import {
-  StateProps,
-  FilterStateProps,
+  TAppState,
+  TFilterState,
   AppDispatch,
   mutateParamsProps,
 } from "../utils/types";
@@ -21,12 +21,12 @@ const Albums = () => {
   const queryRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const filter = useSelector((state: StateProps) => state.filter);
+  const filter = useSelector((state: TAppState) => state.filter);
   const { data, error, message, loading, pages, tags } = useSelector(
-    (state: StateProps) => state.albums
+    (state: TAppState) => state.albums
   );
 
-  let queryParams: FilterStateProps = {
+  let queryParams: TFilterState = {
     page: searchParams.get("page") || "1",
     direction: searchParams.get("direction") || "descending",
     sort: searchParams.get("sort") || "created",
@@ -42,8 +42,8 @@ const Albums = () => {
   useEffect(() => {
     const isMutated = ["page", "direction", "sort", "query"].some(
       (item) =>
-        queryParams[item as keyof FilterStateProps] !==
-        filter[item as keyof FilterStateProps]
+        queryParams[item as keyof TFilterState] !==
+        filter[item as keyof TFilterState]
     );
     if (data === null && !loading && !error) {
       setSearchParams(queryParams);
@@ -140,6 +140,8 @@ const Albums = () => {
   const shouldError = error && message!.length > 0;
   const shouldRender = data !== null && data.length > 0;
   const shouldNoQuery = data !== null && data.length === 0;
+
+  console.log("rendered");
 
   return (
     <>

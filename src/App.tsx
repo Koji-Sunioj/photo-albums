@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
-import { StateProps } from "./utils/types";
+import { TAppState } from "./utils/types";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
+import Album from "./pages/Album";
 import Albums from "./pages/Albums";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -16,7 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Container from "react-bootstrap/Container";
 
 function App() {
-  const { verified } = useSelector((state: StateProps) => state.auth);
+  const { verified } = useSelector((state: TAppState) => state.auth);
 
   return (
     <BrowserRouter>
@@ -29,6 +30,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/sign-in/forgot-password" element={<ForgotPassword />} />
+          <Route path="/albums/:albumId" element={<Album />} />
           {verified && (
             <>
               <Route path="/my-account" element={<MyAccount />} />

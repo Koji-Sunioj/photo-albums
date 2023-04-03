@@ -13,7 +13,7 @@ import {
 } from "../redux/reducers/userSlice";
 
 import { useSelector, useDispatch } from "react-redux";
-import { StateProps, AppDispatch } from "../utils/types";
+import { TAppState, AppDispatch } from "../utils/types";
 
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -25,12 +25,13 @@ const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const {
-    filterToggle: { filterDisplay, toggleDisplay },
-    filter,
-    auth: { verified, counter },
-    auth,
-  } = useSelector((state: StateProps) => state);
+  const { filterDisplay, toggleDisplay } = useSelector(
+    (state: TAppState) => state.filterToggle
+  );
+  const filter = useSelector((state: TAppState) => state.filter);
+  const auth = useSelector((state: TAppState) => state.auth);
+  const { verified, counter } = auth;
+
   const { pathname } = useLocation();
   const expires = localStorage.getItem("expires");
   const userName = localStorage.getItem("userName");
@@ -48,15 +49,15 @@ const NavBar = () => {
     !window.location.href.includes("sign-in") &&
     auth.AccessToken === null;
 
+  const expiredToken = counter !== null && counter <= 0;
+  const validToken = counter !== null && counter > 0;
+
   useEffect(() => {
+    console.log("effecting");
     pathname === "/albums"
       ? dispatch(displayToggle(true))
       : dispatch(displayToggle(false));
 
-    shouldRevoke &&
-      ["AccessToken", "expires", "userName"].forEach((item) => {
-        localStorage.removeItem(item);
-      });
     shouldVerify &&
       dispatch(verifyToken({ userName: userName!, token: AccessToken! }));
 
@@ -70,20 +71,22 @@ const NavBar = () => {
         })
       );
 
-    if (counter !== null && counter <= 0) {
+    (shouldRevoke || expiredToken) &&
       ["AccessToken", "expires", "userName"].forEach((item) => {
         localStorage.removeItem(item);
       });
+
+    if (expiredToken) {
       dispatch(resetUser());
       navigate("/", {
         state: { message: "session timed out", variant: "info" },
       });
     }
 
-    if (counter !== null && counter > 0) {
+    if (validToken) {
       const interval = setInterval(() => {
         dispatch(setCounter(counter - 1));
-      }, 1000);
+      }, 60000);
 
       return () => clearInterval(interval);
     }
@@ -115,9 +118,14 @@ const NavBar = () => {
               Photo Albums
             </Nav.Link>
             {verified ? (
-              <Nav.Link as={Link} to="/my-account">
-                My account
-              </Nav.Link>
+              <>
+                <Nav.Link as={Link} to="/my-account">
+                  My account
+                </Nav.Link>
+                <Nav.Link as={Link} to="/create-album">
+                  Create album
+                </Nav.Link>
+              </>
             ) : (
               <Nav.Link as={Link} to="/sign-in">
                 Sign in

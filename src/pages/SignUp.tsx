@@ -8,7 +8,7 @@ import {
   resetUser,
 } from "../redux/reducers/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { StateProps, AppDispatch } from "../utils/types";
+import { TAppState, AppDispatch } from "../utils/types";
 
 import { checkPw } from "../utils/checkPw";
 import AuthForm from "../components/AuthForm";
@@ -21,7 +21,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, message, patched, userName } = useSelector(
-    (state: StateProps) => state.auth
+    (state: TAppState) => state.auth
   );
 
   useEffect(() => {

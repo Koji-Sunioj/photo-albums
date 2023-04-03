@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
-import { StateProps, AppDispatch, AuthType } from "../utils/types";
+import { TAppState, AppDispatch, TAuthState } from "../utils/types";
 import { signIn, resetMessage } from "../redux/reducers/userSlice";
 
 import Col from "react-bootstrap/Col";
@@ -15,7 +15,7 @@ const SignIn = () => {
   const {
     auth: { AccessToken, loading, message },
     auth,
-  } = useSelector((state: StateProps) => state);
+  } = useSelector((state: TAppState) => state);
   const navigate = useNavigate();
   const { state } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +26,7 @@ const SignIn = () => {
     shouldRedirect &&
       (() => {
         ["AccessToken", "expires", "userName"].forEach((item) => {
-          const value = auth[item as keyof AuthType];
+          const value = auth[item as keyof TAuthState];
           localStorage.setItem(item, String(value)!);
         });
         dispatch(resetMessage());

@@ -5,22 +5,44 @@ import * as React from "react";
 export type StateType = typeof store.getState;
 export type AppDispatch = typeof store.dispatch;
 
-export type StateProps = {
-  albums: AlbumStateProps;
-  filter: FilterStateProps;
-  filterToggle: NavBarToggleProps;
-  auth: AuthType;
+export type TAppState = {
+  albums: TAlbumsState;
+  album: TAlbumState;
+  filter: TFilterState;
+  filterToggle: TNavbarState;
+  auth: TAuthState;
 };
 
-export type childrenProps = {
-  children: JSX.Element[];
+export type TFilterState = {
+  page: string;
+  direction: string;
+  sort: string;
+  type: string;
+  query?: string;
 };
 
-export type apisProps = {
-  [index: string]: string;
+export type TAlbumsState = {
+  data: TAlbum[] | null;
+  tags: string[] | null;
+  pages: number | null;
+  error: boolean;
+  message: string | null;
+  loading: boolean;
 };
 
-export type AuthType = {
+export type TAlbumState = {
+  data: TAlbum | null;
+  error: boolean;
+  message: string | null;
+  loading: boolean;
+};
+
+export type TNavbarState = {
+  toggleDisplay: boolean;
+  filterDisplay: boolean;
+};
+
+export type TAuthState = {
   userName: null | string;
   AccessToken: null | string;
   expires: null | number;
@@ -31,7 +53,7 @@ export type AuthType = {
   counter: null | number;
 };
 
-export type AlbumType = {
+export type TAlbum = {
   albumId: string;
   created: string;
   photoLength: number;
@@ -41,42 +63,28 @@ export type AlbumType = {
   userName: string;
 };
 
+export type childrenProps = {
+  children: JSX.Element[];
+};
+
+export type apisProps = {
+  [index: string]: string;
+};
+
 export type PhotoType = {
   url: string;
   order: number;
   text: string;
 };
 
-export type AlbumStateProps = {
-  data: AlbumType[] | null;
-  tags: string[] | null;
-  pages: number | null;
-  error: boolean;
-  message: string | null;
-  loading: boolean;
-};
-
-export type FilterStateProps = {
-  page: string;
-  direction: string;
-  sort: string;
-  type: string;
-  query?: string;
-};
-
-export type NavBarToggleProps = {
-  toggleDisplay: boolean;
-  filterDisplay: boolean;
-};
-
 export type AlbumListProps = {
-  albums: AlbumType[];
+  albums: TAlbum[];
   mutateParams: mutateParamsProps;
   query: string;
 };
 
 export type AlbumQueryProps = {
-  filter: FilterStateProps;
+  filter: TFilterState;
   mutateParams: mutateParamsProps;
   createQuery: createQuery;
   queryRef: React.RefObject<HTMLButtonElement>;
@@ -102,7 +110,11 @@ export type createQuery = (event: React.FormEvent<HTMLFormElement>) => void;
 export type removeTags = (tag: string) => void;
 
 export type AlbumPaginationProps = {
-  filter: FilterStateProps;
+  filter: TFilterState;
   pages: number;
   mutateParams: mutateParamsProps;
+};
+
+export type AlbumCarouselProps = {
+  album: TAlbum;
 };

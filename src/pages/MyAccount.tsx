@@ -2,7 +2,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { resetUser } from "../redux/reducers/userSlice";
-import { StateProps, AppDispatch } from "../utils/types";
+import { TAppState, AppDispatch } from "../utils/types";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -13,7 +13,7 @@ import Button from "react-bootstrap/Button";
 const MyAccount = () => {
   const {
     auth: { userName },
-  } = useSelector((state: StateProps) => state);
+  } = useSelector((state: TAppState) => state);
   const navigate = useNavigate();
   const { state } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
