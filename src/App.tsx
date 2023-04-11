@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import HomePage from "./pages/HomePage";
 import NavBar from "./components/NavBar";
 import MyAccount from "./pages/MyAccount";
+import CreateAlbum from "./pages/CreateAlbum";
 import ResetPassword from "./pages/ResetPassword";
 import { RemoveSlash } from "./utils/removeSlash";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/albums/:albumId" element={<Album />} />
           {verified && (
             <>
+              <Route path="/create-album" element={<CreateAlbum />} />
               <Route path="/my-account" element={<MyAccount />} />
               <Route
                 path="/my-account/reset-password"

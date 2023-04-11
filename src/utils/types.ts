@@ -57,64 +57,82 @@ export type TAlbum = {
   albumId: string;
   created: string;
   photoLength: number;
-  photos: PhotoType[];
+  photos: TPhoto[];
   tags: string[];
   title: string;
   userName: string;
 };
 
-export type childrenProps = {
-  children: JSX.Element[];
-};
-
-export type apisProps = {
+export type TApiPointer = {
   [index: string]: string;
 };
 
-export type PhotoType = {
+export type TPhoto = {
   url: string;
   order: number;
   text: string;
 };
 
-export type AlbumListProps = {
+export type TAlbumListProps = {
   albums: TAlbum[];
-  mutateParams: mutateParamsProps;
+  mutateParams: TMutateParams;
   query: string;
 };
 
-export type AlbumQueryProps = {
-  filter: TFilterState;
-  mutateParams: mutateParamsProps;
-  createQuery: createQuery;
-  queryRef: React.RefObject<HTMLButtonElement>;
-  searchDisable: searchDisable;
-  checkTags: searchDisable;
+export type TAlbumQueryProps = {
   loading: boolean;
-  removeTags: removeTags;
-  changeSelect: changeSelect;
+  filter: TFilterState;
+  queryRef: React.RefObject<HTMLButtonElement>;
+  removeTags: (tag: string) => void;
+  mutateParams: TMutateParams;
+  createQuery: (event: React.FormEvent<HTMLFormElement>) => void;
+  checkTags: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchDisable: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  changeSelect: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-export type searchDisable = (
-  event: React.ChangeEvent<HTMLInputElement>
-) => void;
-
-export type changeSelect = (
-  event: React.ChangeEvent<HTMLSelectElement>
-) => void;
-
-export type mutateParamsProps = (newValues: {}, origin?: null | string) => void;
-
-export type createQuery = (event: React.FormEvent<HTMLFormElement>) => void;
-
-export type removeTags = (tag: string) => void;
-
-export type AlbumPaginationProps = {
+export type TAlbumPaginationProps = {
   filter: TFilterState;
   pages: number;
-  mutateParams: mutateParamsProps;
+  mutateParams: TMutateParams;
 };
 
-export type AlbumCarouselProps = {
+export type TUploadCarouselProps = {
+  index: number;
+  editMode: boolean;
+  previews: TPhotoFile[];
+  reOrder: (order: number, position: string) => void;
+  mutateCopy: (
+    newValue: boolean | string,
+    file: TPhotoFile,
+    attribute: string
+  ) => void;
+  deletePicture: (file: TPhotoFile) => void;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
+};
+
+export type TAlbumFormProps = {
+  previewMapping: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+export type TAlbumEditProps = {
+  setUploadStep: React.Dispatch<React.SetStateAction<string>>;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  startOver: () => void;
+};
+
+export type TPhotoFile = {
+  name: string;
+  type: string;
+  file: File;
+  blob: string;
+  closed: boolean;
+  text: null;
+  order: number;
+};
+
+export type TMutateParams = (newValues: {}, origin?: null | string) => void;
+
+export type TAlbumCarouselProps = {
   album: TAlbum;
 };

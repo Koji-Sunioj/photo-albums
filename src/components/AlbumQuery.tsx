@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { AlbumQueryProps, TAppState } from "../utils/types";
+import { TAlbumQueryProps, TAppState } from "../utils/types";
 
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/esm/Row";
@@ -18,7 +18,7 @@ const AlbumQuery = ({
   checkTags,
   removeTags,
   changeSelect,
-}: AlbumQueryProps) => {
+}: TAlbumQueryProps) => {
   const { type, sort, direction, query } = filter;
 
   const {

@@ -1,4 +1,4 @@
-import { AlbumPaginationProps } from "../utils/types";
+import { TAlbumPaginationProps } from "../utils/types";
 
 import Pagination from "react-bootstrap/Pagination";
 
@@ -6,7 +6,7 @@ const AlbumsPagination = ({
   filter,
   pages,
   mutateParams,
-}: AlbumPaginationProps) => {
+}: TAlbumPaginationProps) => {
   const { page } = filter;
   const pagesMap = new Array(Number(pages))
     .fill(null)

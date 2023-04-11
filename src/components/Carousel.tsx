@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AlbumCarouselProps } from "../utils/types";
+import { TAlbumCarouselProps } from "../utils/types";
 
 import moment from "moment";
 import Card from "react-bootstrap/Card";
@@ -7,8 +7,8 @@ import Stack from "react-bootstrap/esm/Stack";
 import Button from "react-bootstrap/esm/Button";
 import Carousel from "react-bootstrap/Carousel";
 
-const AlbumCarousel = ({ album }: AlbumCarouselProps) => {
-  const { title, created, photoLength, photos, tags, userName } = album;
+const AlbumCarousel = ({ album }: TAlbumCarouselProps) => {
+  const { title, created, photos, tags, userName } = album;
 
   return (
     <>
@@ -37,7 +37,7 @@ const AlbumCarousel = ({ album }: AlbumCarouselProps) => {
       </Card.Subtitle>
       <Card.Text>{userName}</Card.Text>
       <Stack direction="horizontal" gap={3} className="mb-3">
-        {album.tags.map((tag) => (
+        {tags.map((tag) => (
           <Link
             to={`/albums?page=1&direction=descending&sort=created&query=${tag}&type=tags`}
           >

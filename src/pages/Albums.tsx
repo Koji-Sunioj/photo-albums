@@ -9,7 +9,7 @@ import {
   TAppState,
   TFilterState,
   AppDispatch,
-  mutateParamsProps,
+  TMutateParams,
 } from "../utils/types";
 
 import AlbumList from "../components/AlbumList";
@@ -60,7 +60,7 @@ const Albums = () => {
     }
   });
 
-  const mutateParams: mutateParamsProps = (newValues, origin) => {
+  const mutateParams: TMutateParams = (newValues, origin) => {
     Object.assign(queryParams, newValues);
     const shoulResetQuery =
       origin === "radio" && queryParams.hasOwnProperty("query");

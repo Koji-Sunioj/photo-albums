@@ -21,6 +21,14 @@ code {
   transition: opacity 1s ease-in-out;
 }
 
+.carousel-control-next,
+.carousel-control-prev {
+  width: 50%;
+  height: 50%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .carousel-img {
   height: 50vw;
   width: auto;
@@ -31,3 +39,33 @@ code {
 
 }
 
+.carousel-panel  {
+  background-color: white;
+  border: 1px solid black;
+  margin: auto;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: start;
+  color: black
+};
+
+@media screen and (max-width: 992px) {
+  .album-img {
+        height: 100%;
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+  .carousel-img {
+    height: 80vw;
+  }
+  .carousel-p
+  {
+    white-space: nowrap; 
+    width: 100%; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+   }
+  
+}

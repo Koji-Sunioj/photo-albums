@@ -6,9 +6,9 @@ import Col from "react-bootstrap/esm/Col";
 import Button from "react-bootstrap/esm/Button";
 
 import moment from "moment";
-import { AlbumListProps } from "../utils/types";
+import { TAlbumListProps } from "../utils/types";
 
-const AlbumList = ({ albums, mutateParams, query }: AlbumListProps) => {
+const AlbumList = ({ albums, mutateParams, query }: TAlbumListProps) => {
   return (
     <Row>
       {albums.map((album) => {
