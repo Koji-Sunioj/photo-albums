@@ -53,7 +53,6 @@ const NavBar = () => {
   const validToken = counter !== null && counter > 0;
 
   useEffect(() => {
-    console.log("effecting");
     pathname === "/albums"
       ? dispatch(displayToggle(true))
       : dispatch(displayToggle(false));
@@ -65,7 +64,7 @@ const NavBar = () => {
       dispatch(
         setFromVerify({
           userName: userName!,
-          token: AccessToken,
+          AccessToken: AccessToken,
           expires: expires,
           counter: Math.trunc((Number(expires) - Date.now()) / 1000),
         })

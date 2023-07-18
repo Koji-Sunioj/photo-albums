@@ -6,14 +6,16 @@ import Button from "react-bootstrap/esm/Button";
 
 const AlbumEdit = ({
   setEditMode,
-  setUploadStep,
+  setCreateFlow,
   startOver,
+  editMode,
 }: TAlbumEditProps) => {
   return (
     <>
       <h2>Your gallery</h2>
       <Form.Group className="mb-3">
         <Form.Check
+          checked={editMode}
           label="edit mode"
           onChange={(e) => {
             const { checked } = e.currentTarget;
@@ -25,7 +27,7 @@ const AlbumEdit = ({
         <Button
           variant="primary"
           onClick={() => {
-            setUploadStep("submit");
+            setCreateFlow("submit");
           }}
         >
           Next

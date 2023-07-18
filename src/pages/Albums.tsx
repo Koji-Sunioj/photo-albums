@@ -141,8 +141,6 @@ const Albums = () => {
   const shouldRender = data !== null && data.length > 0;
   const shouldNoQuery = data !== null && data.length === 0;
 
-  console.log("rendered");
-
   return (
     <>
       <AlbumQuery

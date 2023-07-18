@@ -35,6 +35,7 @@ export type TAlbumState = {
   error: boolean;
   message: string | null;
   loading: boolean;
+  mutateState: string;
 };
 
 export type TNavbarState = {
@@ -91,6 +92,15 @@ export type TAlbumQueryProps = {
   changeSelect: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
+export type TAlbumSubmitProps = {
+  title: string;
+  tags: string[];
+  previews: TPhotoFile[];
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  setCreateFlow: React.Dispatch<React.SetStateAction<string>>;
+};
+
 export type TAlbumPaginationProps = {
   filter: TFilterState;
   pages: number;
@@ -116,9 +126,10 @@ export type TAlbumFormProps = {
 };
 
 export type TAlbumEditProps = {
-  setUploadStep: React.Dispatch<React.SetStateAction<string>>;
+  setCreateFlow: React.Dispatch<React.SetStateAction<string>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   startOver: () => void;
+  editMode: boolean;
 };
 
 export type TPhotoFile = {

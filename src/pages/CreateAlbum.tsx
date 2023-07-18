@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { TPhotoFile } from "../utils/types";
+import { useState, useEffect } from "react";
 import { fileMapper } from "../utils/mappers";
+import { useSelector, useDispatch } from "react-redux";
+import { resetAlbum } from "../redux/reducers/albumSlice";
+import { TPhotoFile, TAppState, AppDispatch } from "../utils/types";
 
 import AlbumEdit from "../components/AlbumEdit";
 import AlbumForm from "../components/AlbumForm";
+import AlbumSubmit from "../components/AlbumSubmit";
 import UploadCarousel from "../components/UploadCarousel";
 
 import Row from "react-bootstrap/Row";
@@ -11,9 +14,22 @@ import Col from "react-bootstrap/Col";
 
 const CreateAlbum = () => {
   const [index, setIndex] = useState(0);
+  const [tags, setTags] = useState<string[]>([]);
+  const [title, setTitle] = useState<string>("");
   const [editMode, setEditMode] = useState(false);
   const [createFlow, setCreateFlow] = useState("upload");
   const [previews, setPreviews] = useState<TPhotoFile[]>([]);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { mutateState } = useSelector((state: TAppState) => state.album);
+
+  useEffect(() => {
+    if (mutateState !== "idle") {
+      setTimeout(() => {
+        dispatch(resetAlbum());
+      }, 2000);
+    }
+  });
 
   const previewMapping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -83,10 +99,21 @@ const CreateAlbum = () => {
           {createFlow === "upload" && (
             <AlbumForm previewMapping={previewMapping} />
           )}
+          {createFlow === "submit" && (
+            <AlbumSubmit
+              tags={tags}
+              title={title}
+              previews={previews}
+              setTags={setTags}
+              setTitle={setTitle}
+              setCreateFlow={setCreateFlow}
+            />
+          )}
           {shouldCarousel && (
             <AlbumEdit
+              editMode={editMode}
               setEditMode={setEditMode}
-              setUploadStep={setCreateFlow}
+              setCreateFlow={setCreateFlow}
               startOver={startOver}
             />
           )}

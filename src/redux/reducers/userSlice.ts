@@ -143,6 +143,7 @@ export const userSlice = createSlice({
       const {
         payload: { AccessToken, expires, userName, counter },
       } = action;
+
       return { ...state, AccessToken, expires, userName, counter };
     },
   },
