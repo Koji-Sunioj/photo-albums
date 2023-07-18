@@ -5,10 +5,8 @@ import Button from "react-bootstrap/esm/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 
 import { useNavigate } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createAlbum } from "../redux/reducers/albumSlice";
-import { resetAlbums } from "../redux/reducers/albumsSlice";
 
 import { TAppState, AppDispatch } from "../utils/types";
 import { TAlbumSubmitProps } from "../utils/types";
@@ -25,22 +23,13 @@ const AlbumSubmit = ({
   titleRef,
   sendAlbum,
 }: TAlbumSubmitProps) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const {
     album: { data, error, loading, message, mutateState },
   } = useSelector((state: TAppState) => state);
 
-  const isCreated = data !== null && mutateState === "created";
-
-  useEffect(() => {
-    if (mutateState === "created" && data !== null) {
-      dispatch(resetAlbums());
-      setTimeout(() => {
-        navigate("/albums/" + data.albumId);
-      }, 2000);
-    }
-  });
+  const isCreatedOrUpdated =
+    (data !== null && mutateState === "created") ||
+    (data !== null && mutateState === "updated");
 
   return (
     <>
@@ -123,7 +112,7 @@ const AlbumSubmit = ({
       )}
       {error && <Alert variant={"danger"}>{message}</Alert>}
       {loading && <Alert variant={"info"}>{message}</Alert>}
-      {isCreated && <Alert variant={"success"}>{message}</Alert>}
+      {isCreatedOrUpdated && <Alert variant={"success"}>{message}</Alert>}
     </>
   );
 };

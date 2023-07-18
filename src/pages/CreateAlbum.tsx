@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
 import { fileMapper } from "../utils/mappers";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchAlbum,
   patchAlbum,
@@ -14,6 +14,7 @@ import {
   TAlbum,
   TPhoto,
 } from "../utils/types";
+import { resetAlbums } from "../redux/reducers/albumsSlice";
 
 import AlbumEdit from "../components/AlbumEdit";
 import AlbumForm from "../components/AlbumForm";
@@ -26,6 +27,7 @@ import Col from "react-bootstrap/Col";
 import { createAlbum } from "../redux/reducers/albumSlice";
 
 const CreateAlbum = ({ task }: { task: string }) => {
+  const navigate = useNavigate();
   const { albumId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -61,6 +63,21 @@ const CreateAlbum = ({ task }: { task: string }) => {
     if (!shouldFetch && data !== null && previews.length === 0) {
       createMapFromFetch(data);
       console.log("mapping existing photos");
+    }
+
+    if (mutateState === "updated" && data !== null) {
+      setTimeout(() => {
+        dispatch(resetAlbum());
+        dispatch(resetAlbums());
+        navigate("/albums/" + data.albumId);
+      }, 2000);
+    }
+
+    if (mutateState === "created" && data !== null) {
+      dispatch(resetAlbums());
+      setTimeout(() => {
+        navigate("/albums/" + data.albumId);
+      }, 2000);
     }
   });
 
@@ -185,7 +202,6 @@ const CreateAlbum = ({ task }: { task: string }) => {
 
   const sendAlbum = () => {
     const { AccessToken, userName } = auth;
-
     if (AccessToken !== null && userName !== null) {
       switch (task) {
         case "create":
@@ -209,9 +225,6 @@ const CreateAlbum = ({ task }: { task: string }) => {
             mutateS3: mutateS3,
           };
           dispatch(patchAlbum(existingAlbum));
-          console.log(previews);
-          console.log(mutateS3);
-          console.log(tags);
           break;
       }
     }
