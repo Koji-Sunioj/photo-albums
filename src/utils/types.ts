@@ -146,4 +146,8 @@ export type TMutateParams = (newValues: {}, origin?: null | string) => void;
 
 export type TAlbumCarouselProps = {
   album: TAlbum;
+  auth: TAuthState;
+  mutateState: string;
+  message: string | null;
+  loading: boolean;
 };

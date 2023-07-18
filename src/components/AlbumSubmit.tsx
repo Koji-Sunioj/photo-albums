@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createAlbum } from "../redux/reducers/albumSlice";
+import { resetAlbums } from "../redux/reducers/albumsSlice";
 
 import { TAppState, AppDispatch } from "../utils/types";
 import { TAlbumSubmitProps } from "../utils/types";
@@ -21,18 +22,17 @@ const AlbumSubmit = ({
   setCreateFlow,
 }: TAlbumSubmitProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { AccessToken, userName } = useSelector(
-    (state: TAppState) => state.auth
-  );
   const navigate = useNavigate();
   const {
     album: { data, error, loading, message, mutateState },
+    auth: { userName, AccessToken },
   } = useSelector((state: TAppState) => state);
 
   const isCreated = data !== null && mutateState === "created";
 
   useEffect(() => {
     if (mutateState === "created" && data !== null) {
+      dispatch(resetAlbums());
       setTimeout(() => {
         navigate("/albums/" + data.albumId);
       }, 2000);

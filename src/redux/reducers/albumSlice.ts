@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { getApi } from "../../utils/getApi";
 import { TAlbumState, TPhotoFile } from "../../utils/types";
-import { checkRequest } from "../../utils/checkRequest";
 import { putS3Mapper, responseMapper } from "../../utils/mappers";
 
 const albumApi = getApi("AlbumEndpoint");
@@ -14,8 +13,19 @@ export const fetchAlbum = createAsyncThunk(
     console.log("hitting");
     const url = `${albumApi}albums/${albumId}`;
     const request = await fetch(url);
-    await checkRequest(request);
     return await request.json();
+  }
+);
+
+export const deleteAlbum = createAsyncThunk(
+  "delete-album",
+  async (payload: { albumId: string; AccessToken: string }) => {
+    const { albumId, AccessToken } = payload;
+    const statusCode = await fetch(`${albumApi}albums/${albumId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${AccessToken}` },
+    }).then((response) => response.status);
+    return statusCode;
   }
 );
 
@@ -43,15 +53,12 @@ export const createAlbum = createAsyncThunk(
       //2. parse to a format which can be inserted into dynamodb
       const finalPhotos = putResponses.map(responseMapper);
       const sendObject = {
-        /*  token: AccessToken,
-        album: { */
         photos: finalPhotos,
         albumId: albumId,
         title: title,
         userName: userName,
         tags: tags,
         photoLength: finalPhotos.length,
-        /*  }, */
       };
       //3. deposit into ddb
       const url = `${albumApi}albums/`;
@@ -115,6 +122,21 @@ export const albumSlice = createSlice({
         state.message = "photo album successfully created";
       })
       .addCase(createAlbum.rejected, (state, action) => {
+        state.message = (action.payload as Error).message!;
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(deleteAlbum.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+        state.message = "deleting photo album";
+      })
+      .addCase(deleteAlbum.fulfilled, (state) => {
+        state.loading = false;
+        state.mutateState = "deleted";
+        state.message = "photo album successfully deleting";
+      })
+      .addCase(deleteAlbum.rejected, (state, action) => {
         state.message = (action.payload as Error).message!;
         state.loading = false;
         state.error = true;

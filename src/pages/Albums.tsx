@@ -16,15 +16,17 @@ import AlbumList from "../components/AlbumList";
 import AlbumQuery from "../components/AlbumQuery";
 import AlbumsSkeletons from "../components/AlbumsSkeletons";
 import AlbumsPagination from "../components/AlbumsPagination";
+import { resetAlbum } from "../redux/reducers/albumSlice";
 
 const Albums = () => {
   const queryRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [searchParams, setSearchParams] = useSearchParams();
   const filter = useSelector((state: TAppState) => state.filter);
-  const { data, error, message, loading, pages, tags } = useSelector(
-    (state: TAppState) => state.albums
-  );
+  const {
+    albums: { data, error, message, loading, pages, tags },
+    album: { mutateState },
+  } = useSelector((state: TAppState) => state);
 
   let queryParams: TFilterState = {
     page: searchParams.get("page") || "1",
@@ -58,6 +60,7 @@ const Albums = () => {
       queryMismatch && dispatch(fetchAlbums(queryParams));
       dispatch(setFilter(queryParams));
     }
+    mutateState !== "idle" && dispatch(resetAlbum());
   });
 
   const mutateParams: TMutateParams = (newValues, origin) => {
