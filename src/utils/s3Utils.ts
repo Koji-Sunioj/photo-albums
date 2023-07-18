@@ -13,3 +13,17 @@ export const getSignedUrl = async (payload: {
   }).then((response) => response.json());
   return url;
 };
+
+export const deleteObject = async (payload: {
+  AccessToken: string;
+  albumId: string;
+  s3Object: string;
+}) => {
+  const albumApi = getApi("AlbumEndpoint");
+  const { albumId, AccessToken, s3Object } = payload;
+  const statusCode = await fetch(`${albumApi}albums/${albumId}/${s3Object}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${AccessToken}` },
+  }).then((response) => response.status);
+  return statusCode;
+};

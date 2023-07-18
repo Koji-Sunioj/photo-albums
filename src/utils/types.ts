@@ -95,10 +95,14 @@ export type TAlbumQueryProps = {
 export type TAlbumSubmitProps = {
   title: string;
   tags: string[];
-  previews: TPhotoFile[];
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setCreateFlow: React.Dispatch<React.SetStateAction<string>>;
+  checkTitle: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  pushTag: (tag: string) => void;
+  tagRef: React.RefObject<HTMLInputElement>;
+  titleRef: React.RefObject<HTMLInputElement>;
+  sendAlbum: () => void;
 };
 
 export type TAlbumPaginationProps = {
@@ -123,6 +127,8 @@ export type TUploadCarouselProps = {
 
 export type TAlbumFormProps = {
   previewMapping: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setCreateFlow: React.Dispatch<React.SetStateAction<string>>;
+  task: string;
 };
 
 export type TAlbumEditProps = {
@@ -135,10 +141,10 @@ export type TAlbumEditProps = {
 export type TPhotoFile = {
   name: string;
   type: string;
-  file: File;
+  file: File | null;
   blob: string;
   closed: boolean;
-  text: null;
+  text: string | null;
   order: number;
 };
 
@@ -146,8 +152,5 @@ export type TMutateParams = (newValues: {}, origin?: null | string) => void;
 
 export type TAlbumCarouselProps = {
   album: TAlbum;
-  auth: TAuthState;
-  mutateState: string;
-  message: string | null;
-  loading: boolean;
+  removeAlbum: () => void;
 };

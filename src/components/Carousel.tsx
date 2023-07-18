@@ -1,34 +1,15 @@
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { deleteAlbum } from "../redux/reducers/albumSlice";
-import { TAlbumCarouselProps, AppDispatch } from "../utils/types";
+import { TAlbumCarouselProps } from "../utils/types";
 
 import moment from "moment";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+
 import Card from "react-bootstrap/Card";
-import Alert from "react-bootstrap/Alert";
 import Stack from "react-bootstrap/esm/Stack";
 import Button from "react-bootstrap/esm/Button";
 import Carousel from "react-bootstrap/Carousel";
-import { resetAlbums } from "../redux/reducers/albumsSlice";
 
-const AlbumCarousel = ({
-  album,
-  auth,
-  mutateState,
-  loading,
-  message,
-}: TAlbumCarouselProps) => {
-  const dispatch = useDispatch<AppDispatch>();
+const AlbumCarousel = ({ album, removeAlbum }: TAlbumCarouselProps) => {
   const { title, created, photos, tags, userName } = album;
-
-  const removeAlbum = () => {
-    dispatch(
-      deleteAlbum({ albumId: album.albumId, AccessToken: auth.AccessToken! })
-    );
-    dispatch(resetAlbums());
-  };
 
   return (
     <>
@@ -68,35 +49,6 @@ const AlbumCarousel = ({
           </Link>
         ))}
       </Stack>
-      {auth.userName === userName && (
-        <>
-          <h3>options</h3>
-          <Stack direction="horizontal" gap={3} className="mb-3">
-            <Button
-              variant="danger"
-              onClick={removeAlbum}
-              disabled={loading || mutateState === "deleted"}
-            >
-              Delete Album
-            </Button>
-            <Link to={`/albums/edit/${album.albumId}`}>
-              <Button
-                variant="primary"
-                disabled={loading || mutateState === "deleted"}
-              >
-                Edit Album
-              </Button>
-            </Link>
-          </Stack>
-          <Row>
-            <Col lg="6">
-              {mutateState === "deleted" && (
-                <Alert variant={"success"}>{message}</Alert>
-              )}
-            </Col>
-          </Row>
-        </>
-      )}
     </>
   );
 };

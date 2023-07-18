@@ -34,7 +34,14 @@ function App() {
           <Route path="/albums/:albumId" element={<Album />} />
           {verified && (
             <>
-              <Route path="/create-album" element={<CreateAlbum />} />
+              <Route
+                path="/create-album"
+                element={<CreateAlbum task={"create"} />}
+              />
+              <Route
+                path="/edit-album/:albumId"
+                element={<CreateAlbum task={"edit"} />}
+              />
               <Route path="/my-account" element={<MyAccount />} />
               <Route
                 path="/my-account/reset-password"

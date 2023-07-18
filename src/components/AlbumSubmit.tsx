@@ -16,16 +16,19 @@ import { TAlbumSubmitProps } from "../utils/types";
 const AlbumSubmit = ({
   tags,
   title,
-  previews,
   setTags,
   setTitle,
+  checkTitle,
   setCreateFlow,
+  pushTag,
+  tagRef,
+  titleRef,
+  sendAlbum,
 }: TAlbumSubmitProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {
     album: { data, error, loading, message, mutateState },
-    auth: { userName, AccessToken },
   } = useSelector((state: TAppState) => state);
 
   const isCreated = data !== null && mutateState === "created";
@@ -38,40 +41,6 @@ const AlbumSubmit = ({
       }, 2000);
     }
   });
-
-  const tagRef = useRef<HTMLInputElement>(null);
-  const titleRef = useRef<HTMLInputElement>(null);
-
-  const pushTag = (tag: string) => {
-    if (tag.length > 0 && !tags.includes(tag) && tags.length < 5) {
-      const tagCopy = [...tags];
-      tagCopy.push(tag);
-      setTags(tagCopy);
-      tagRef.current!.value = "";
-    }
-  };
-
-  const sendAlbum = () => {
-    if (AccessToken !== null && userName !== null) {
-      const newAlbum = {
-        tags: tags,
-        title: title,
-        previews: previews,
-        userName: userName,
-        AccessToken: AccessToken,
-      };
-      dispatch(createAlbum(newAlbum));
-    }
-  };
-
-  const checkTitle = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const properLength = event.currentTarget.value.length > 0;
-    const entered = event.key === "Enter";
-    if (entered && properLength) {
-      sendAlbum();
-      event.preventDefault();
-    }
-  };
 
   return (
     <>

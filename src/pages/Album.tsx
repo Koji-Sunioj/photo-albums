@@ -1,9 +1,17 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { TAppState, AppDispatch } from "../utils/types";
-import { fetchAlbum } from "../redux/reducers/albumSlice";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
+import { fetchAlbum } from "../redux/reducers/albumSlice";
+import { deleteAlbum } from "../redux/reducers/albumSlice";
+import { resetAlbums } from "../redux/reducers/albumsSlice";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
+import Stack from "react-bootstrap/esm/Stack";
+import Button from "react-bootstrap/esm/Button";
 import AlbumCarousel from "../components/Carousel";
 
 const Album = () => {
@@ -27,18 +35,47 @@ const Album = () => {
       }, 2000);
   });
 
+  const removeAlbum = () => {
+    dispatch(
+      deleteAlbum({ albumId: albumId!, AccessToken: auth.AccessToken! })
+    );
+    dispatch(resetAlbums());
+  };
+
   const shouldRender = data !== null && data.albumId === albumId;
+  const shouldOptions = shouldRender && auth.userName === data.userName;
 
   return (
     <>
-      {shouldRender && (
-        <AlbumCarousel
-          album={data}
-          auth={auth}
-          mutateState={mutateState}
-          message={message}
-          loading={loading}
-        />
+      {shouldRender && <AlbumCarousel album={data} removeAlbum={removeAlbum} />}
+      {shouldOptions && (
+        <>
+          <h3>options</h3>
+          <Stack direction="horizontal" gap={3} className="mb-3">
+            <Button
+              variant="danger"
+              onClick={removeAlbum}
+              disabled={loading || mutateState === "deleted"}
+            >
+              Delete Album
+            </Button>
+            <Link to={`/edit-album/${albumId}`}>
+              <Button
+                variant="primary"
+                disabled={loading || mutateState === "deleted"}
+              >
+                Edit Album
+              </Button>
+            </Link>
+          </Stack>
+          <Row>
+            <Col lg="6">
+              {mutateState === "deleted" && (
+                <Alert variant={"success"}>{message}</Alert>
+              )}
+            </Col>
+          </Row>
+        </>
       )}
     </>
   );
