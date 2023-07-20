@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { TAppState, AppDispatch } from "../utils/types";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
+import { TAppState, AppDispatch } from "../utils/types";
 import { fetchAlbum } from "../redux/reducers/albumSlice";
 import { deleteAlbum } from "../redux/reducers/albumSlice";
 import { resetAlbums } from "../redux/reducers/albumsSlice";
@@ -12,7 +12,8 @@ import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Stack from "react-bootstrap/esm/Stack";
 import Button from "react-bootstrap/esm/Button";
-import AlbumCarousel from "../components/Carousel";
+import AlbumCarousel from "../components/AlbumCarousel";
+import AlbumSkeleton from "../components/AlbumSkeleton";
 
 const Album = () => {
   const { albumId } = useParams();
@@ -47,6 +48,7 @@ const Album = () => {
 
   return (
     <>
+      {loading && <AlbumSkeleton />}
       {shouldRender && <AlbumCarousel album={data} removeAlbum={removeAlbum} />}
       {shouldOptions && (
         <>

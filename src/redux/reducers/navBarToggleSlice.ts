@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 import { TNavbarState } from "../../utils/types";
 
 const initialToggleState: TNavbarState = {

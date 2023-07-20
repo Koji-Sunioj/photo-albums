@@ -1,5 +1,7 @@
 # This is a proper refactor of my website hosted with AWS to include Typescript and Redux
 
+I have used this to learn about different AWS microservices, such as Cognito, Lambda, Api Gateway, DynamoDB and S3 bucket. The website is hosted on Cloudfront using a React build file.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

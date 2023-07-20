@@ -1,15 +1,15 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+import { TAlbumSubmitProps } from "../utils/types";
+import { TAppState, AppDispatch } from "../utils/types";
+
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/esm/Button";
 import InputGroup from "react-bootstrap/InputGroup";
-
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import { TAppState, AppDispatch } from "../utils/types";
-import { TAlbumSubmitProps } from "../utils/types";
 
 const AlbumSubmit = ({
   tags,

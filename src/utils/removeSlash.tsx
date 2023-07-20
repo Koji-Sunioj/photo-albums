@@ -1,7 +1,7 @@
+import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 
 import { TAppState } from "./types";
-import { useSelector } from "react-redux";
 
 export const RemoveSlash = () => {
   const { filter } = useSelector((state: TAppState) => state);

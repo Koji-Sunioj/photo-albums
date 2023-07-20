@@ -1,19 +1,7 @@
-import { getSignedUrl, deleteObject } from "./s3Utils";
-
 import { TPhotoFile } from "./types";
 
-/* export const fileMapper = (file: File, i: number) => {
-  return {
-    name: file.name,
-    type: file.type,
-    file: file,
-    blob: URL.createObjectURL(file),
-    closed: true,
-    text: null,
-    order: i + 1,
-  };
-};
- */
+import { getSignedUrl, deleteObject } from "./s3Utils";
+
 export const fileMapper = (defaultLength: number) => {
   return (file: File, i: number) => {
     return {

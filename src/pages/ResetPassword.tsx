@@ -1,19 +1,18 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   setMessage,
   resetPassword,
   resetPatch,
 } from "../redux/reducers/userSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { checkPw } from "../utils/checkPw";
 import { TAppState, AppDispatch } from "../utils/types";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Alert from "react-bootstrap/Alert";
-
-import { checkPw } from "../utils/checkPw";
 import AuthForm from "../components/AuthForm";
 
 const ResetPassword = () => {

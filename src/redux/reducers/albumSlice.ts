@@ -1,14 +1,13 @@
-import uuid from "react-uuid";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-import { getApi } from "../../utils/getApi";
-import { TAlbumState, TPhotoFile } from "../../utils/types";
 import {
   putS3Mapper,
   responseMapper,
   deleteS3Mapper,
   previewMapper,
 } from "../../utils/mappers";
+import uuid from "react-uuid";
+import { getApi } from "../../utils/getApi";
+import { TAlbumState, TPhotoFile } from "../../utils/types";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const albumApi = getApi("AlbumEndpoint");
 

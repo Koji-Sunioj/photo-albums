@@ -1,6 +1,6 @@
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
-import { useSelector, useDispatch } from "react-redux";
 import { resetUser } from "../redux/reducers/userSlice";
 import { TAppState, AppDispatch } from "../utils/types";
 

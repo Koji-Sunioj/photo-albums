@@ -1,11 +1,12 @@
-import { fileMapper } from "../utils/mappers";
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   fetchAlbum,
   patchAlbum,
   resetAlbum,
+  createAlbum,
 } from "../redux/reducers/albumSlice";
 import {
   TPhotoFile,
@@ -14,17 +15,15 @@ import {
   TAlbum,
   TPhoto,
 } from "../utils/types";
+import { fileMapper } from "../utils/mappers";
 import { resetAlbums } from "../redux/reducers/albumsSlice";
 
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import AlbumEdit from "../components/AlbumEdit";
 import AlbumForm from "../components/AlbumForm";
 import AlbumSubmit from "../components/AlbumSubmit";
 import UploadCarousel from "../components/UploadCarousel";
-
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
-import { createAlbum } from "../redux/reducers/albumSlice";
 
 const CreateAlbum = ({ task }: { task: string }) => {
   const navigate = useNavigate();

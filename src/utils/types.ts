@@ -95,14 +95,14 @@ export type TAlbumQueryProps = {
 export type TAlbumSubmitProps = {
   title: string;
   tags: string[];
+  tagRef: React.RefObject<HTMLInputElement>;
+  titleRef: React.RefObject<HTMLInputElement>;
+  sendAlbum: () => void;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setCreateFlow: React.Dispatch<React.SetStateAction<string>>;
   checkTitle: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   pushTag: (tag: string) => void;
-  tagRef: React.RefObject<HTMLInputElement>;
-  titleRef: React.RefObject<HTMLInputElement>;
-  sendAlbum: () => void;
 };
 
 export type TAlbumPaginationProps = {

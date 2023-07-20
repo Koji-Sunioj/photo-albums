@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { checkRequest } from "../../utils/checkRequest";
-
 import { getApi } from "../../utils/getApi";
+import { checkRequest } from "../../utils/checkRequest";
 import { TFilterState, TAlbumsState } from "../../utils/types";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchAlbums = createAsyncThunk(
   "fetch-albums",

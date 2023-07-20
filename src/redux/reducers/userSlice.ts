@@ -1,9 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 import { getApi } from "../../utils/getApi";
 import { TAuthState } from "../../utils/types";
-
 import { checkRequest } from "../../utils/checkRequest";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const signUpApi = getApi("SignUpEndpoint");
 

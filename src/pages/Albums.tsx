@@ -1,22 +1,22 @@
 import * as React from "react";
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import { useSelector, useDispatch } from "react-redux";
-import { setFilter } from "../redux/reducers/filterSlice";
-import { fetchAlbums } from "../redux/reducers/albumsSlice";
+
 import {
   TAppState,
   TFilterState,
   AppDispatch,
   TMutateParams,
 } from "../utils/types";
+import { setFilter } from "../redux/reducers/filterSlice";
+import { resetAlbum } from "../redux/reducers/albumSlice";
+import { fetchAlbums } from "../redux/reducers/albumsSlice";
 
 import AlbumList from "../components/AlbumList";
 import AlbumQuery from "../components/AlbumQuery";
 import AlbumsSkeletons from "../components/AlbumsSkeletons";
 import AlbumsPagination from "../components/AlbumsPagination";
-import { resetAlbum } from "../redux/reducers/albumSlice";
 
 const Albums = () => {
   const queryRef = useRef<HTMLButtonElement>(null);

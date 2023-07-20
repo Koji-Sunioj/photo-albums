@@ -1,12 +1,12 @@
+import moment from "moment";
 import { Link } from "react-router-dom";
+
+import { TAlbumListProps } from "../utils/types";
 
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import Button from "react-bootstrap/esm/Button";
-
-import moment from "moment";
-import { TAlbumListProps } from "../utils/types";
 
 const AlbumList = ({ albums, mutateParams, query }: TAlbumListProps) => {
   return (
@@ -25,6 +25,7 @@ const AlbumList = ({ albums, mutateParams, query }: TAlbumListProps) => {
                 variant="top"
                 src={photos[0].url}
                 className="album-img"
+                style={{ backgroundColor: "grey" }}
               />
               <Card.Body>
                 <Link to={`/albums/${albumId}`}>

@@ -1,18 +1,17 @@
 import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import {
-  displayFilter,
-  displayToggle,
-} from "../redux/reducers/navBarToggleSlice";
 import {
   resetUser,
   verifyToken,
   setFromVerify,
   setCounter,
 } from "../redux/reducers/userSlice";
-
-import { useSelector, useDispatch } from "react-redux";
+import {
+  displayFilter,
+  displayToggle,
+} from "../redux/reducers/navBarToggleSlice";
 import { TAppState, AppDispatch } from "../utils/types";
 
 import Nav from "react-bootstrap/Nav";
