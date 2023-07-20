@@ -5,12 +5,15 @@ export const getSignedUrl = async (payload: {
   type: string;
   AccessToken: string;
 }) => {
-  const preSignedApi = getApi("AlbumInitUrl");
+  const albumApi = getApi("AlbumEndpoint");
   const { name, type, AccessToken } = payload;
-  const url = await fetch(preSignedApi + `?key=${name}&content_type=${type}`, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${AccessToken}` },
-  }).then((response) => response.json());
+  const url = await fetch(
+    `${albumApi}albums/init?key=${name}&content_type=${type}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${AccessToken}` },
+    }
+  ).then((response) => response.json());
   return url;
 };
 
